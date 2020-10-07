@@ -1,0 +1,5 @@
+{
+  "projects": {
+    "modules/customer": "git@github.com:wepala/weos-customer-module.git"
+  }
+}
