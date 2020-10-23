@@ -52,7 +52,7 @@ services:
       - POSTGRES_DB=$POSTGRES_DB
       - ACCOUNT_NAME=$ACCOUNT_NAME
       - ACCOUNT_ID=$ACCOUNT_ID
-      - ELASTICSEARCH_ENDPOINT=http://es01:9200
+      - ELASTICSEARCH_URL=http://es01:9200
       - LOG_LEVEL=debug
     depends_on:
       rds:
@@ -82,7 +82,7 @@ services:
     environment:
       - LOG_LEVEL=debug
       - BASE_URL=$BASE_URL
-      - GRAPHQL_URL=$GRAPHQL_URL
+      - GRAPHQL_URL=http://query:8080/wecrm/graphql
       - ACCOUNT_ID=$ACCOUNT_ID
       - APPLICATION_TITLE=WeOS
       - APPLICATION_ID=$APPLICATION_ID
