@@ -82,6 +82,7 @@ services:
     environment:
       - LOG_LEVEL=debug
       - BASE_URL=$BASE_URL
+      - GRAPHQL_URL=$GRAPHQL_URL
       - ACCOUNT_ID=$ACCOUNT_ID
       - APPLICATION_TITLE=WeOS
       - APPLICATION_ID=$APPLICATION_ID
