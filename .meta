@@ -3,6 +3,7 @@
     "modules/customer": "git@github.com:wepala/weos-customer-module.git",
     "apps/web": "git@github.com:wepala/weos-crm-web",
     "apps/query": "git@github.com:wepala/wecrm-query.git",
-    "apps/api-gateway": "git@github.com:wepala/wecrm-api-gateway.git"
+    "apps/api-gateway": "git@github.com:wepala/wecrm-api-gateway.git",
+    "modules/authorization": "git@github.com:wepala/weos-authorization-module.git"
   }
 }

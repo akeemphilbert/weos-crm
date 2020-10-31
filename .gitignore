@@ -22,4 +22,4 @@ vendor/
 .idea
 
 # Apps
-apps
+apps/modules/authorization/
