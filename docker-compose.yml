@@ -99,3 +99,30 @@ services:
     depends_on:
       rds:
         condition: service_healthy
+
+  account-app:
+    build:
+      context: ./apps/account
+      dockerfile: Dockerfile
+      target: app
+    hostname: weos_crm_account_app
+    environment:
+      - LOG_LEVEL=debug
+      - BASE_URL=$BASE_URL
+      - GRAPHQL_URL=http://query:8080/wecrm/graphql
+      - ACCOUNT_ID=$ACCOUNT_ID
+      - APPLICATION_TITLE=WeOS
+      - APPLICATION_ID=$APPLICATION_ID
+      - ACCOUNT_NAME=$ACCOUNT_NAME
+      - POSTGRES_HOST=$POSTGRES_HOST
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_PORT=$POSTGRES_PORT
+    volumes:
+      - ./apps/account/weplugin/templates:/app/templates
+      - ./apps/account/api.yaml:/app/api.yaml
+      - ./apps/account/weos-crm:/app/weos-crm
+    depends_on:
+      rds:
+        condition: service_healthy
