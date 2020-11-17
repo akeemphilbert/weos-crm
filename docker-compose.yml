@@ -92,6 +92,8 @@ services:
       - POSTGRES_USER=$POSTGRES_USER
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
       - POSTGRES_PORT=$POSTGRES_PORT
+      - LOGIN_URL=$LOGIN_URL
+
     volumes:
       - ./apps/web/weplugin/templates:/app/templates
       - ./apps/web/api.yaml:/app/api.yaml
@@ -120,6 +122,8 @@ services:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
       - POSTGRES_PORT=$POSTGRES_PORT
       - EMAIL_URL=$EMAIL_URL
+      - LOGIN_URL=$LOGIN_URL
+
     volumes:
       - ./apps/account/weplugin/templates:/app/templates
       - ./apps/account/api.yaml:/app/api.yaml
