@@ -20,27 +20,6 @@ services:
     ports:
       - 5432:5432
 
-  # Currently ES is not in use
-  # es01:
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
-  #   container_name: es01
-  #   environment:
-  #     - xpack.security.enabled=false
-  #     - discovery.type=single-node
-  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  #   ulimits:
-  #     memlock:
-  #       soft: -1
-  #       hard: -1
-  #     nofile:
-  #       soft: 65536
-  #       hard: 65536
-  #   cap_add:
-  #     - IPC_LOCK
-  #   ports:
-  #     - 9200:9200
-  #     - 9300:9300
-
   query:
     build: ./apps/query
     hostname: weos_crm_query
@@ -57,6 +36,38 @@ services:
     depends_on:
       rds:
         condition: service_healthy
+
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: es01
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  redis:
+    image: redis:alpine
+
+  elasticsearch:
+    build: ./services/elasticsearch
+    environment:
+      - ACCOUNT_NAME=$ACCOUNT_NAME
+      - ACCOUNT_ID=$ACCOUNT_ID
+      - ELASTIC_SEARCH_ENDPOINT=http://es01:9200
+      - REDIS_ENDPOINT=redis:6379
+      - MAPPING_FOLDER=$MAPPING_FOLDER
 
   api-gateway:
     build: ./apps/api-gateway
