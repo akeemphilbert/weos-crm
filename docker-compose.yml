@@ -61,7 +61,7 @@ services:
     image: redis:alpine
 
   elasticsearch:
-    build: ./services/elasticsearch
+    build: ./modules/authorization/persistence/elasticsearch
     environment:
       - ACCOUNT_NAME=$ACCOUNT_NAME
       - ACCOUNT_ID=$ACCOUNT_ID
