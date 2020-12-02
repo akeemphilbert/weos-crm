@@ -60,7 +60,7 @@ services:
     depends_on:
       rds:
         condition: service_healthy
-
+    
   api-gateway:
     build: ./apps/api-gateway
     volumes:
