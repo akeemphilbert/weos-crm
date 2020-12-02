@@ -59,16 +59,7 @@ services:
 
   redis:
     image: redis:alpine
-
-  elasticsearch:
-    build: ./modules/authorization/persistence/elasticsearch
-    environment:
-      - ACCOUNT_NAME=$ACCOUNT_NAME
-      - ACCOUNT_ID=$ACCOUNT_ID
-      - ELASTIC_SEARCH_ENDPOINT=http://es01:9200
-      - REDIS_ENDPOINT=redis:6379
-      - MAPPING_FOLDER=$MAPPING_FOLDER
-
+    
   api-gateway:
     build: ./apps/api-gateway
     volumes:
