@@ -22,5 +22,10 @@ vendor/
 .idea
 
 # Apps
-apps/modules/authorization/
+/modules/authorization/
 /apps/account/
+/modules/hr/
+/apps/hr-admin/
+/apis/hr/
+/modules/productivity/
+/apis/productivity/

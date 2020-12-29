@@ -135,3 +135,28 @@ services:
     depends_on:
       rds:
         condition: service_healthy
+
+  productivity-api:
+    build:
+      context: ./apis/productivity
+      dockerfile: Dockerfile
+    hostname: productivity_api
+    environment:
+      - LOG_LEVEL=debug
+      - BASE_URL=$BASE_URL
+      - GRAPHQL_URL=https://query:8080/weos-crm/graphql
+      - ACCOUNT_ID=$ACCOUNT_ID
+      - APPLICATION_TITLE=api
+      - APPLICATION_ID=$APPLICATION_ID
+      - ACCOUNT_NAME=$ACCOUNT_NAME
+      - POSTGRES_HOST=$POSTGRES_HOST
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_PORT=$POSTGRES_PORT
+    volumes:
+      - ./apis/productivity/api.yaml:/app/api.yaml
+      - ./apis/productivity/productivity-api:/app/productivity-api
+    depends_on:
+      rds:
+        condition: service_healthy
