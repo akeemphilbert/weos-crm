@@ -160,3 +160,27 @@ services:
     depends_on:
       rds:
         condition: service_healthy
+
+  marketplace-api:
+    build:
+      context: ./apis/marketplace
+      dockerfile: Dockerfile
+    hostname: marketplace_api
+    environment:
+      - LOG_LEVEL=debug
+      - BASE_URL=$BASE_URL
+      - ACCOUNT_ID=$ACCOUNT_ID
+      - APPLICATION_TITLE=api
+      - APPLICATION_ID=$APPLICATION_ID
+      - ACCOUNT_NAME=$ACCOUNT_NAME
+      - POSTGRES_HOST=$POSTGRES_HOST
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_PORT=$POSTGRES_PORT
+    volumes:
+      - ./apis/marketplace/api.yaml:/app/api.yaml
+      - ./apis/marketplace/marketplace-api:/app/marketplace-api
+    depends_on:
+      rds:
+        condition: service_healthy

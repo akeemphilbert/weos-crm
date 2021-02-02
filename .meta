@@ -10,6 +10,11 @@
     "apps/hr-admin": "git@github.com:wepala/weos-hr-admin.git",
     "apis/hr": "git@github.com:wepala/weos-hr-api.git",
     "modules/productivity": "git@github.com:wepala/weos-productivity-module.git",
-    "apis/productivity": "git@github.com:wepala/weos-productivity-api.git"
+    "apis/productivity": "git@github.com:wepala/weos-productivity-api.git",
+    "modules/podcast": "git@github.com:wepala/weos-podcast-module.git",
+    "apis/podcast": "git@github.com:wepala/weos-podcast-api.git",
+    "modules/sales": "git@github.com:wepala/weos-sales-module.git",
+    "modules/marketplace": "git@github.com:wepala/weos-marketplace-module.git",
+    "apis/marketplace": "git@github.com:wepala/weos-marketplace-api.git"
   }
 }

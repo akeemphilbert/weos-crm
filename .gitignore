@@ -29,3 +29,8 @@ vendor/
 /apis/hr/
 /modules/productivity/
 /apis/productivity/
+/modules/podcast/
+/apis/podcast/
+/modules/sales/
+/modules/marketplace/
+/apis/marketplace/
