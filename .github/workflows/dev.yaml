@@ -91,5 +91,4 @@ jobs:
         with:
           name: Dev Build ${{ matrix.goos }} ${{ matrix.goarch }}
           path: build-artifacts?/*
-  test: #test the builds on their respective platforms to ensure they work
 #  TODO: Add job for building desktop app.
