@@ -91,11 +91,11 @@ jobs:
     steps:
       - name: get api src code
         run: |
-          if [ "${{ job.build.outputs.ticket }}" == "dev" ]
+          if [ "${{ needs.build.outputs.ticket }}" == "dev" ]
           then
             URL="https://github.com/wepala/weos-crm-api/archive/dev.tar.gz"
           else
-            URL="https://github.com/wepala/weos-crm-api/archive/feature/${{ job.build.outputs.ticket }}.tar.gz"
+            URL="https://github.com/wepala/weos-crm-api/archive/feature/${{ needs.build.outputs.ticket }}.tar.gz"
           fi
           CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
           echo "tried $CODE $URL"
