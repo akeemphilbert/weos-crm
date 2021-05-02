@@ -1,0 +1,95 @@
+name: Feature Workflow
+on:
+  push:
+    branches:
+      - dev
+      - feature/*
+
+env:
+  SLACK_CHANNEL: wecrm
+  SLACK_USERNAME: WeOS CRM
+  SLACK_ICON: https://github.com/wepala.png?size=48
+  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  SLACK_FOOTER: copyright 2021 Wepala
+  GOPRIVATE: github.com/wepala/*
+  BASE_URL: http://localhost:8681/wecrm
+  BASE_PATH: /admin/
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      ticket: ${{ steps.setup.ticket }}
+      today: ${{ steps.setup.today }}
+    steps:
+      - name: Setup build variables
+        id: setup
+        run: |
+          TICKET=$(echo ${GITHUB_REF} | sed -e "s/refs\/heads\///g" | sed -e "s/feature\///g" | )
+          echo "::set-output name=today::$(date +'%Y%m%d%H')"
+          echo "::set-output name=ticket::${TICKET}"
+      - name: Download and build admin app
+        run: |
+          if [ "${{ steps.setup.outputs.ticket }}" == "dev" ]
+          then
+            URL="https://github.com/wepala/weos-crm-admin-default/archive/dev.tar.gz"
+          else
+            URL="https://github.com/wepala/weos-crm-admin-default/archive/feature/${{ steps.setup.outputs.ticket }}.tar.gz"
+          fi
+          CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
+          echo "tried $CODE $URL"
+          #if the url doesn't return a 404 then let's download and extract
+          if [ "$CODE" != "404" ]
+          then
+              # successful
+              if curl -sL -o release.tar.gz "$URL"; then
+                echo "got most recent release $URL"
+                tar -xvzf release.tar.gz --strip-components 1
+                yarn install
+                yarn generate
+              else
+                print "failed to download $URL"
+              fi
+              exit 0
+          fi
+          exit 124
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: admin-app-build
+          path: dist
+  release-matrix:
+    name: Release Go Binaries
+    runs-on: ubuntu-latest
+    needs: prep
+    strategy:
+      matrix:
+        # build and publish in parallel: linux/386, linux/amd64, windows/386, windows/amd64, darwin/amd64
+        goos: [ linux, windows, darwin ]
+        goarch: [ "386", amd64 ]
+        exclude:
+          - goarch: "386"
+            goos: darwin
+    steps:
+      - uses: actions/checkout@v2
+      - name: extract admin app
+        run: |
+          mkdir -p apps/admin/default
+      - uses: actions/download-artifact@v2
+        with:
+          name: admin-app-build
+          path: apps/admin/default
+      - uses: akeemphilbert/go-release-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          goversion: 1.15
+          binary_name: "weos-crm"
+          extra_files: LICENSE NOTICE README.md api.yaml apps
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Dev Build ${{ matrix.goos }} ${{ matrix.goarch }}
+          path: build-artifacts?/*
+  test: #test the builds on their respective platforms to ensure they work
+#  TODO: Add job for building desktop app.

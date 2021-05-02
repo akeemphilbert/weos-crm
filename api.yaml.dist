@@ -6,7 +6,7 @@ info:
 
 servers:
   -
-    url: https://weos.cloud/wecrm
+    url: https://localhost:8681
     description: Hosted WeOS CRM
 
 x-weos-config:
