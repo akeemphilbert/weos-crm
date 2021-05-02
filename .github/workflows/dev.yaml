@@ -105,17 +105,17 @@ jobs:
           fi
           exit 124
       - uses: crazy-max/ghaction-xgo@v1
-          with:
-            xgo_version: latest
-            go_version: 1.15.x
-            dest: build
-            prefix: weos-crm
-            targets: windows/386,windows/amd64,linux/386,linux/amd64,darwin/386,darwin/amd64
-            v: true
-            x: false
-            race: false
-            ldflags: -s -w
-            buildmode: default
+        with:
+          xgo_version: latest
+          go_version: 1.15.x
+          dest: build
+          prefix: weos-crm
+          targets: windows/386,windows/amd64,linux/386,linux/amd64,darwin/386,darwin/amd64
+          v: true
+          x: false
+          race: false
+          ldflags: -s -w
+          buildmode: default
       - name: extract admin app
         run: |
           mkdir -p apps/admin/default
