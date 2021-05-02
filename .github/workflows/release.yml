@@ -1,19 +1,23 @@
-name: Development Workflow
+name: Release Workflow
 on:
-  push:
-    branches:
-      - dev
-      - feature/*
-
+  workflow_dispatch:
+    inputs:
+      apiBranch:
+        description: The branch to use for the api
+        required: true
+        default: master
+      adminBranch:
+        description: The branch name of the admin app to deploy
+        required: true
+        default: master
 env:
+  BASE_URL: http://localhost:8681
+  BASE_PATH: /admin/
   SLACK_CHANNEL: wecrm
   SLACK_USERNAME: WeOS CRM
   SLACK_ICON: https://github.com/wepala.png?size=48
   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-  SLACK_FOOTER: copyright 2021 Wepala
   GOPRIVATE: github.com/wepala/*
-  BASE_URL: http://localhost:8681/wecrm
-  BASE_PATH: /admin/
 
 jobs:
   build-admin:
@@ -48,12 +52,7 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Download and build admin app
         run: |
-          if [ "${{ steps.setup.outputs.ticket }}" == "dev" ]
-          then
-            URL="https://github.com/wepala/weos-crm-admin-default/archive/dev.tar.gz"
-          else
-            URL="https://github.com/wepala/weos-crm-admin-default/archive/feature/${{ steps.setup.outputs.ticket }}.tar.gz"
-          fi
+          URL="https://github.com/wepala/weos-crm-admin-default/archive/${{ github.event.inputs.adminBranch }}.tar.gz"
           CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
           echo "tried $CODE $URL"
           #if the url doesn't return a 404 then let's download and extract
@@ -91,12 +90,7 @@ jobs:
     steps:
       - name: get api src code
         run: |
-          if [ "${{ needs.build-admin.outputs.ticket }}" == "dev" ]
-          then
-            URL="https://github.com/wepala/weos-crm-api/archive/dev.tar.gz"
-          else
-            URL="https://github.com/wepala/weos-crm-api/archive/feature/${{ needs.build-admin.outputs.ticket }}.tar.gz"
-          fi
+          URL="https://github.com/wepala/weos-crm-api/archive/${{ github.event.inputs.apiBranch }}.tar.gz"
           CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
           echo "tried $CODE $URL"
           #if the url doesn't return a 404 then let's download and extract
@@ -137,4 +131,15 @@ jobs:
         with:
           name: WeOS CRM ${{ matrix.goos }} ${{ matrix.goarch }}
           path: build-${{ matrix.goos }}-${{ matrix.goarch }}/*
-#  TODO: Add job for building desktop app.
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: WeOS CRM ${{ matrix.goos }} ${{ matrix.goarch }}
+          path: apps/admin/default
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "release.tar.gz,foo/*.txt"
+          bodyFile: "body.md"
+          token: ${{ secrets.GITHUB_TOKEN }}
