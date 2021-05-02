@@ -19,8 +19,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      ticket: ${{ steps.setup.ticket }}
-      today: ${{ steps.setup.today }}
+      ticket: ${{ steps.setup.outputs.ticket }}
+      today: ${{ steps.setup.outputs.today }}
     steps:
       - name: Setup build variables
         id: setup
