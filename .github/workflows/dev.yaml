@@ -28,6 +28,24 @@ jobs:
           TICKET=$(echo ${GITHUB_REF} | sed -e "s/refs\/heads\///g" | sed -e "s/feature\///g")
           echo "::set-output name=today::$(date +'%Y%m%d%H')"
           echo "::set-output name=ticket::${TICKET}"
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: '14'
+          check-latest: true
+
+      - name: Get yarn cache directory path 🛠
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache node_modules 📦
+        uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: Download and build admin app
         run: |
           if [ "${{ steps.setup.outputs.ticket }}" == "dev" ]
@@ -71,7 +89,29 @@ jobs:
           - goarch: "386"
             goos: darwin
     steps:
-      - uses: actions/checkout@v2
+      - name: get api src code
+        run: |
+          if [ "${{ steps.setup.outputs.ticket }}" == "dev" ]
+          then
+            URL="https://github.com/wepala/weos-crm-api/archive/dev.tar.gz"
+          else
+            URL="https://github.com/wepala/weos-crm-api/archive/feature/${{ steps.setup.outputs.ticket }}.tar.gz"
+          fi
+          CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
+          echo "tried $CODE $URL"
+          #if the url doesn't return a 404 then let's download and extract
+          if [ "$CODE" != "404" ]
+          then
+              # successful
+              if curl -sL -o release.tar.gz "$URL"; then
+                echo "got most recent release $URL"
+                tar -xvzf release.tar.gz --strip-components 1
+              else
+                print "failed to download $URL"
+              fi
+              exit 0
+          fi
+          exit 124
       - name: extract admin app
         run: |
           mkdir -p apps/admin/default
