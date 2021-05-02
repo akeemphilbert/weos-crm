@@ -1,4 +1,4 @@
-name: Feature Workflow
+name: Development Workflow
 on:
   push:
     branches:
@@ -61,7 +61,7 @@ jobs:
   release-matrix:
     name: Release Go Binaries
     runs-on: ubuntu-latest
-    needs: prep
+    needs: build
     strategy:
       matrix:
         # build and publish in parallel: linux/386, linux/amd64, windows/386, windows/amd64, darwin/amd64
