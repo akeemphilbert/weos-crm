@@ -125,6 +125,6 @@ jobs:
           path: apps/admin/default
       - uses: actions/upload-artifact@v2
         with:
-          name: Dev Build ${{ matrix.goos }} ${{ matrix.goarch }}
-          path: build-artifacts?/*
+          name: Dev Build
+          path: build/*
 #  TODO: Add job for building desktop app.
