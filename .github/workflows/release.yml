@@ -88,6 +88,7 @@ jobs:
           - goarch: "386"
             goos: darwin
     steps:
+      - uses: actions/checkout@v2
       - name: get api src code
         run: |
           URL="https://github.com/wepala/weos-crm-api/archive/${{ github.event.inputs.apiBranch }}.tar.gz"
@@ -122,6 +123,9 @@ jobs:
         run: |
           chmod -R +x build-${{ matrix.goos }}-${{ matrix.goarch }}/*
           cp api.yaml.dist build-${{ matrix.goos }}-${{ matrix.goarch }}/api.yaml
+          cp LICENSE build-${{ matrix.goos }}-${{ matrix.goarch }}/LICENSE
+          cp NOTICE build-${{ matrix.goos }}-${{ matrix.goarch }}/NOTICE
+          cp README.md build-${{ matrix.goos }}-${{ matrix.goarch }}/README.md
           mkdir -p build-${{ matrix.goos }}-${{ matrix.goarch }}/apps/admin/default
       - uses: actions/download-artifact@v2
         with:
