@@ -1,0 +1,149 @@
+name: Release Workflow
+on:
+  workflow_dispatch:
+    inputs:
+      apiBranch:
+        description: The branch to use for the api
+        required: true
+        default: master
+      adminBranch:
+        description: The branch name of the admin app to deploy
+        required: true
+        default: master
+env:
+  BASE_URL: http://localhost:8681
+  BASE_PATH: /admin/
+  SLACK_CHANNEL: wecrm
+  SLACK_USERNAME: WeOS CRM
+  SLACK_ICON: https://github.com/wepala.png?size=48
+  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  GOPRIVATE: github.com/wepala/*
+
+jobs:
+  build-admin:
+    runs-on: ubuntu-latest
+    outputs:
+      ticket: ${{ steps.setup.outputs.ticket }}
+      today: ${{ steps.setup.outputs.today }}
+    steps:
+      - name: Setup build variables
+        id: setup
+        run: |
+          TICKET=$(echo ${GITHUB_REF} | sed -e "s/refs\/heads\///g" | sed -e "s/feature\///g")
+          echo "::set-output name=today::$(date +'%Y%m%d%H')"
+          echo "::set-output name=ticket::${TICKET}"
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: '14'
+          check-latest: true
+
+      - name: Get yarn cache directory path 🛠
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache node_modules 📦
+        uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Download and build admin app
+        run: |
+          URL="https://github.com/wepala/weos-crm-admin-default/archive/${{ github.event.inputs.adminBranch }}.tar.gz"
+          CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
+          echo "tried $CODE $URL"
+          #if the url doesn't return a 404 then let's download and extract
+          if [ "$CODE" != "404" ]
+          then
+              # successful
+              if curl -sL -o release.tar.gz "$URL"; then
+                echo "got most recent release $URL"
+                tar -xvzf release.tar.gz --strip-components 1
+                yarn install
+                yarn generate
+              else
+                print "failed to download $URL"
+              fi
+              exit 0
+          fi
+          exit 124
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: admin-app-build
+          path: dist
+  build-api:
+    name: Release Go Binaries
+    runs-on: ubuntu-latest
+    needs: build-admin
+    strategy:
+      matrix:
+        # build and publish in parallel: linux/386, linux/amd64, windows/386, windows/amd64, darwin/amd64
+        goos: [ linux, windows, darwin ]
+        goarch: [ "386", amd64 ]
+        exclude:
+          - goarch: "386"
+            goos: darwin
+    steps:
+      - uses: actions/checkout@v2
+      - name: get api src code
+        run: |
+          URL="https://github.com/wepala/weos-crm-api/archive/${{ github.event.inputs.apiBranch }}.tar.gz"
+          CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
+          echo "tried $CODE $URL"
+          #if the url doesn't return a 404 then let's download and extract
+          if [ "$CODE" != "404" ]
+          then
+              # successful
+              if curl -sL -o release.tar.gz "$URL"; then
+                echo "got most recent release $URL"
+                tar -xvzf release.tar.gz --strip-components 1
+              else
+                print "failed to download $URL"
+              fi
+              exit 0
+          fi
+          exit 124
+      - uses: crazy-max/ghaction-xgo@v1
+        with:
+          xgo_version: latest
+          go_version: 1.15.x
+          dest: build-${{ matrix.goos }}-${{ matrix.goarch }}
+          prefix: weos-crm
+          targets: ${{ matrix.goos }}/${{ matrix.goarch }}
+          v: true
+          x: false
+          race: false
+          ldflags: -s -w
+          buildmode: default
+      - name: setup app
+        run: |
+          chmod -R +x build-${{ matrix.goos }}-${{ matrix.goarch }}/*
+          cp api.yaml.dist build-${{ matrix.goos }}-${{ matrix.goarch }}/api.yaml
+          cp LICENSE build-${{ matrix.goos }}-${{ matrix.goarch }}/LICENSE
+          cp NOTICE build-${{ matrix.goos }}-${{ matrix.goarch }}/NOTICE
+          cp README.md build-${{ matrix.goos }}-${{ matrix.goarch }}/README.md
+          mkdir -p build-${{ matrix.goos }}-${{ matrix.goarch }}/apps/admin/default
+      - uses: actions/download-artifact@v2
+        with:
+          name: admin-app-build
+          path: build-${{ matrix.goos }}-${{ matrix.goarch }}/apps/admin/default
+      - uses: actions/upload-artifact@v2
+        with:
+          name: WeOS CRM ${{ matrix.goos }} ${{ matrix.goarch }}
+          path: build-${{ matrix.goos }}-${{ matrix.goarch }}/*
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: WeOS CRM ${{ matrix.goos }} ${{ matrix.goarch }}
+          path: apps/admin/default
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "release.tar.gz,foo/*.txt"
+          bodyFile: "body.md"
+          token: ${{ secrets.GITHUB_TOKEN }}

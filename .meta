@@ -1,20 +1,6 @@
 {
   "projects": {
-    "modules/customer": "git@github.com:wepala/weos-customer-module.git",
-    "apps/web": "git@github.com:wepala/weos-crm-web",
-    "apps/query": "git@github.com:wepala/wecrm-query.git",
-    "apps/api-gateway": "git@github.com:wepala/wecrm-api-gateway.git",
-    "modules/authorization": "git@github.com:wepala/weos-authorization-module.git",
-    "apps/account": "git@github.com:wepala/weos-account-app.git",
-    "modules/hr": "git@github.com:wepala/weos-hr.git",
-    "apps/hr-admin": "git@github.com:wepala/weos-hr-admin.git",
-    "apis/hr": "git@github.com:wepala/weos-hr-api.git",
-    "modules/productivity": "git@github.com:wepala/weos-productivity-module.git",
-    "apis/productivity": "git@github.com:wepala/weos-productivity-api.git",
-    "modules/podcast": "git@github.com:wepala/weos-podcast-module.git",
-    "apis/podcast": "git@github.com:wepala/weos-podcast-api.git",
-    "modules/sales": "git@github.com:wepala/weos-sales-module.git",
-    "modules/marketplace": "git@github.com:wepala/weos-marketplace-module.git",
-    "apis/marketplace": "git@github.com:wepala/weos-marketplace-api.git"
+    "api": "git@github.com:wepala/weos-crm-api.git",
+    "apps/admin/default": "git@github.com:wepala/weos-crm-admin-default.git"
   }
 }
