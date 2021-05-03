@@ -162,7 +162,7 @@ jobs:
           cp api.yaml.dist build/win64/api.yaml
           cp -R build/apps/admin/default build/win64/apps/admin
           cp build/weos-crm-windows-4.0-amd64.exe build/win64/weos-crm.exe
-          chmod +x build/win64/weos-crm
+          chmod +x build/win64/weos-crm.exe
           tar -czf weos-crm-win64.tar.gz build/win64/* LICENSE NOTICE README.md --strip-components 2
 
           #mkdir -p build/apps/admin/default
