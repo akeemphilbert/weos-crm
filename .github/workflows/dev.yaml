@@ -117,20 +117,36 @@ jobs:
           race: false
           ldflags: -s -w
           buildmode: default
-      - name: setup app
-        run: |
-          chmod -R +x build/*
-          cp api.yaml.dist build/api.yaml
-          cp LICENSE build/LICENSE
-          cp NOTICE build/NOTICE
-          cp README.md build/README.md
-          mkdir -p build/apps/admin/default
       - uses: actions/download-artifact@v2
         with:
           name: admin-app-build
           path: build/apps/admin/default
+      - name: setup app
+        run: |
+          cp api.yaml.dist build/api.yaml
+
+          #setup mac build
+          mkdir -p build/mac
+          cp build/weos-crm-darwin-10.12-amd64 build/mac/weos-crm
+          chmod +x build/mac/weos-crm
+          tar -czf weos-crm-mac.tar.gz build/mac/weos-crm build/api.yaml LICENSE NOTICE README.md
+
+          #setup linux 32 bit build
+          mkdir -p build/linux32
+          cp build/weos-crm-linux-386 build/linux32/weos-crm
+          chmod +x build/linux32/weos-crm
+          tar -czf weos-crm-linux-386.tar.gz build/linux32/weos-crm build/api.yaml LICENSE NOTICE README.md
+
+          #setup linux 64 bit build
+          mkdir -p build/linux64
+          cp build/weos-crm-linux-amd64 build/linux64/weos-crm
+          chmod +x build/linux64/weos-crm
+          tar -czf weos-crm-linux-amd64.tar.gz build/linux32/weos-crm build/api.yaml LICENSE NOTICE README.md
+
+          #mkdir -p build/apps/admin/default
+
       - uses: actions/upload-artifact@v2
         with:
           name: WeOS CRM all builds
-          path: build/*
+          path: weos-crm-*.tar.gz
 #  TODO: Add job for building desktop app.
