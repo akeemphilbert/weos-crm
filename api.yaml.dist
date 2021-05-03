@@ -1,0 +1,215 @@
+openapi: 3.0.2
+info:
+  title: WeOS CRM REST API
+  version: 0.0.1
+  description: REST API for managing WeOS CRM data
+
+servers:
+  -
+    url: https://localhost:8681
+    description: Hosted WeOS CRM
+
+x-weos-config:
+  logger:
+    level: warn
+    report-caller: true
+    formatter: json
+  database:
+    driver: sqlite3
+    database: wecrm
+  middleware:
+    - RequestID
+    - Recover
+
+paths:
+  /:
+    get:
+      operationId: Homepage
+      responses:
+        "200":
+          description: View App
+  /customers:
+    summary: Get a list of customers
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+      - in: query
+        name: limit
+        schema:
+          type: integer
+      - in: query
+        name: sort
+        schema:
+          type: array
+          items:
+            type: string
+      - in: query
+        name: sort_type
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+    get:
+      operationId: List Customers
+      x-weos-config:
+        handler: GetCustomers
+      responses:
+        200:
+          description: List of Customers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerList'
+        400:
+          description: Bad Request
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
+    post:
+      operationId: Create Customer
+      x-weos-config:
+        handler: CreateCustomer
+      requestBody:
+        description: Create a customer
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        201:
+          description: Create a Customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        400:
+          description: Bad Request
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list      
+  /customer/{id}:
+    put:
+      operationId: Update Customer
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the customer
+      requestBody:
+        description: Update a customer
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      x-weos-config:
+        handler: CreateCustomer
+      responses:
+        200:
+          description: Customer updated
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
+  /admin:
+    get:
+      operationId: Admin
+      x-weos-config:
+        group: True
+        middleware:
+          - DefaultAdmin
+      responses:
+        200:
+          description: View Admin app
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
+components:
+  schemas:
+    CategorizedValue:
+      type: object
+      properties:
+        category:
+          type: string
+        value:
+          type: string
+    Address:
+      type: object
+      properties:
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: integer
+        country:
+          type: string
+    Organization:
+      type: object
+      properties:
+        name:
+          type: string
+        emailDomain:
+          type: string
+        notes:
+          type: string
+    Customer:
+      type: object
+      properties:
+        name:
+          type: string
+        notes:
+          type: string
+        organizations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Organization'
+        emails:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategorizedValue'
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategorizedValue'
+        websites:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategorizedValue'
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+    CustomerList:
+      type: object
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Customer'
+
+
