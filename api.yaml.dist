@@ -15,7 +15,7 @@ x-weos-config:
     report-caller: true
     formatter: json
   database:
-    driver: sqlite
+    driver: sqlite3
     database: wecrm
   middleware:
     - RequestID

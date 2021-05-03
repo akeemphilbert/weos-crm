@@ -80,14 +80,6 @@ jobs:
     name: Release Go Binaries
     runs-on: ubuntu-latest
     needs: build-admin
-    strategy:
-      matrix:
-        # build and publish in parallel: linux/386, linux/amd64, windows/386, windows/amd64, darwin/amd64
-        goos: [ linux, windows, darwin ]
-        goarch: [ "386", amd64 ]
-        exclude:
-          - goarch: "386"
-            goos: darwin
     steps:
       - uses: actions/checkout@v2
       - name: get api src code
@@ -117,9 +109,9 @@ jobs:
         with:
           xgo_version: latest
           go_version: 1.15.x
-          dest: build-${{ matrix.goos }}-${{ matrix.goarch }}
+          dest: build
           prefix: weos-crm
-          targets: ${{ matrix.goos }}/${{ matrix.goarch }}
+          targets: windows/386,windows/amd64,linux/386,linux/amd64,darwin/amd64
           v: true
           x: false
           race: false
@@ -127,18 +119,18 @@ jobs:
           buildmode: default
       - name: setup app
         run: |
-          chmod -R +x build-${{ matrix.goos }}-${{ matrix.goarch }}/*
-          cp api.yaml.dist build-${{ matrix.goos }}-${{ matrix.goarch }}/api.yaml
-          cp LICENSE build-${{ matrix.goos }}-${{ matrix.goarch }}/LICENSE
-          cp NOTICE build-${{ matrix.goos }}-${{ matrix.goarch }}/NOTICE
-          cp README.md build-${{ matrix.goos }}-${{ matrix.goarch }}/README.md
-          mkdir -p build-${{ matrix.goos }}-${{ matrix.goarch }}/apps/admin/default
+          chmod -R +x build/*
+          cp api.yaml.dist build/api.yaml
+          cp LICENSE build/LICENSE
+          cp NOTICE build/NOTICE
+          cp README.md build/README.md
+          mkdir -p build/apps/admin/default
       - uses: actions/download-artifact@v2
         with:
           name: admin-app-build
-          path: build-${{ matrix.goos }}-${{ matrix.goarch }}/apps/admin/default
+          path: build/apps/admin/default
       - uses: actions/upload-artifact@v2
         with:
-          name: WeOS CRM ${{ matrix.goos }} ${{ matrix.goarch }}
-          path: build-${{ matrix.goos }}-${{ matrix.goarch }}/*
+          name: WeOS CRM all builds
+          path: build/*
 #  TODO: Add job for building desktop app.
