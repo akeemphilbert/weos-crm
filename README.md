@@ -13,11 +13,11 @@ There are two ways to get started with WeOS CRM:
 ## WeOS CRM App
 
 ### Quick Start
-1. Download the latest release `wget https://github.com/wepala/weos-crm-api/releases/weos-crm-macos.zip`
+1. Download the latest release `wget https://github.com/wepala/weos-crm/releases`
 1. Unzip the contents of the latest release  `unzip weos-crm-macos.zip`
 1. Open the folder with the application `cd weos-crm`
-1. Run the application `weos-crm` in terminal e.g. `./weos-crm` (the default port is 80 but you can run on a different port by specifying `port` argument e.g.  `-port=8080`)
-1. Go to localhost in your browser `http://localhost`
+1. Run the application `weos-crm` in terminal e.g. `./weos-crm` (the default port is 8681 but you can run on a different port by specifying `port` argument e.g.  `-port=80`)
+1. Go to localhost in your browser `http://localhost:8681`
 
 ### Configuration
 
