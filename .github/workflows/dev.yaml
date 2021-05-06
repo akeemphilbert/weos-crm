@@ -73,22 +73,22 @@ jobs:
       - uses: actions/checkout@v2
       - name: get api src code
         run: |
-        URL="https://github.com/wepala/weos-crm-api/archive/${{ github.event.inputs.api-branch }}.tar.gz"
-        CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
-        echo "tried $CODE $URL"
-        #if the url doesn't return a 404 then let's download and extract
-        if [ "$CODE" != "404" ]
-        then
-         # successful
-         if curl -sL -o release.tar.gz "$URL"; then
-           echo "got most recent release $URL"
-           tar -xvzf release.tar.gz --strip-components 1
-         else
-           print "failed to download $URL"
-         fi
-         exit 0
-        fi
-        exit 124
+          URL="https://github.com/wepala/weos-crm-api/archive/${{ github.event.inputs.api-branch }}.tar.gz"
+          CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
+          echo "tried $CODE $URL"
+          #if the url doesn't return a 404 then let's download and extract
+          if [ "$CODE" != "404" ]
+          then
+           # successful
+           if curl -sL -o release.tar.gz "$URL"; then
+             echo "got most recent release $URL"
+             tar -xvzf release.tar.gz --strip-components 1
+           else
+             print "failed to download $URL"
+           fi
+           exit 0
+          fi
+          exit 124
       - uses: crazy-max/ghaction-xgo@v1
         name: build windows desktop
         with:
