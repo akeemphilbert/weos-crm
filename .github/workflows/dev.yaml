@@ -27,6 +27,7 @@ jobs:
     outputs:
       today: ${{ steps.setup.outputs.today }}
     steps:
+      - uses: actions/checkout@v2
       - name: Setup build variables
         id: setup
         run: |
@@ -70,7 +71,6 @@ jobs:
           fi
           exit 124
 
-      - uses: actions/checkout@v2
       - name: get api src code
         run: |
           URL="https://github.com/wepala/weos-crm-api/archive/${{ github.event.inputs.api-branch }}.tar.gz"
