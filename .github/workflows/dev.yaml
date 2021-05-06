@@ -146,6 +146,7 @@ jobs:
           path: build/apps/admin/default
       - name: setup app
         run: |
+          ls -al .
           cp api.yaml.dist build/api.yaml
 
           #setup mac build
