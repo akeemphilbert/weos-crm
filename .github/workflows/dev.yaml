@@ -135,10 +135,10 @@ jobs:
         run: |
           ls -al api.yaml.dist
           ls -al .
-          cp api.yaml.dist build/api.yaml
 
           #setup mac build
           mkdir -p build/mac/apps/admin/default
+          ls -al api.yaml.dist
           cp api.yaml.dist build/mac/api.yaml
           cp LICENSE build/mac/LICENSE
           cp NOTICE build/mac/NOTICE
