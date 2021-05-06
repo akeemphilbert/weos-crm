@@ -257,16 +257,9 @@ jobs:
         with:
           name: Windows 64 bit
           path: weos-crm-desktop-win64.zip
-
-  build-notication:
-    name: Send build notification
-    runs-on: ubuntu-latest
-    needs: [ build-api ]
-    steps:
       - name: Send build notification
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_COLOR: "FFFF00"
           SLACK_MESSAGE: We were able to create a development build. Get the artifact here https://github.com/wepala/weos-crm/actions/runs/${{ github.run_id }}
           SLACK_TITLE: WeOS CRM Dev Build Created
-#  TODO: Add job for building desktop app.
