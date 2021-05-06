@@ -238,11 +238,11 @@ jobs:
           path: weos-crm-linux-amd64.tar.gz
       - uses: actions/upload-artifact@v2
         with:
-          name: Windows 32 Bit
+          name: Windows 32 Bit Desktop
           path: weos-crm-desktop-win32.zip
       - uses: actions/upload-artifact@v2
         with:
-          name: Windows 64 bit
+          name: Windows 64 bit Desktop
           path: weos-crm-desktop-win64.zip
       - name: Send build notification
         uses: rtCamp/action-slack-notify@v2
