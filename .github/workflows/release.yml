@@ -220,7 +220,7 @@ jobs:
           commit: main
           prerelease: ${{ github.event.inputs.pre-release }}
           tag: ${{ github.event.inputs.version }}
-          artifacts: weos-crm-mac-amd64.tar.gz,weos-crm-desktop-win32.zip,weos-crm-desktop-win64.zipweos-crm-linux-386.tar.gz,weos-crm-linux-amd64.tar.gz,weos-crm-win32.zip,weos-crm-win64.zip
+          artifacts: weos-crm-mac-amd64.tar.gz,weos-crm-desktop-win32.zip,weos-crm-desktop-win64.zip,weos-crm-linux-386.tar.gz,weos-crm-linux-amd64.tar.gz,weos-crm-win32.zip,weos-crm-win64.zip
       - name: Send success notification
         uses: rtCamp/action-slack-notify@v2
         env:
