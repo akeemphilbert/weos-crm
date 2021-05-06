@@ -139,6 +139,7 @@ jobs:
           race: false
           ldflags: -s -w
           buildmode: default
+          tags: server
       - uses: actions/download-artifact@v2
         with:
           name: admin-app-build
