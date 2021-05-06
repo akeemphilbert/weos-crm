@@ -69,11 +69,6 @@ jobs:
               exit 0
           fi
           exit 124
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: admin-app-build
-          path: dist
   build-api:
     name: Release Go Binaries
     runs-on: ubuntu-latest
@@ -140,17 +135,14 @@ jobs:
           ldflags: -s -w
           buildmode: default
           tags: server
-      - uses: actions/download-artifact@v2
-        with:
-          name: admin-app-build
-          path: build/apps/admin/default
       - name: setup app
         run: |
-          ls -al .
+          ls -al api.yaml.dist
           cp api.yaml.dist build/api.yaml
 
           #setup mac build
           mkdir -p build/mac/apps/admin
+          cp -Rf dist build/mac/apps/admin/default
           cp api.yaml.dist build/mac/api.yaml
           cp LICENSE build/mac/LICENSE
           cp NOTICE build/mac/NOTICE
@@ -162,6 +154,7 @@ jobs:
 
           #setup windows 32 bit build
           mkdir -p build/win32/apps/admin
+          cp -Rf dist build/win32/apps/admin/default
           cp api.yaml.dist build/win32/api.yaml
           cp LICENSE build/win32/LICENSE
           cp NOTICE build/win32/NOTICE
@@ -177,6 +170,7 @@ jobs:
 
           #setup windows 64 bit build
           mkdir -p build/win64/apps/admin
+          cp -Rf dist build/win64/apps/admin/default
           cp api.yaml.dist build/win64/api.yaml
           cp LICENSE build/win64/LICENSE
           cp NOTICE build/win64/NOTICE
@@ -191,6 +185,7 @@ jobs:
 
           #setup linux 32 bit build
           mkdir -p build/linux32/apps/admin
+          cp -Rf dist build/linux32/apps/admin/default
           cp api.yaml.dist build/linux32/api.yaml
           cp LICENSE build/linux32/LICENSE
           cp NOTICE build/linux32/NOTICE
@@ -202,6 +197,7 @@ jobs:
 
           #setup linux 64 bit build
           mkdir -p build/linux64/apps/admin
+          cp -Rf dist build/linux64/apps/admin/default
           cp api.yaml.dist build/linux64/api.yaml
           cp LICENSE build/linux64/LICENSE
           cp NOTICE build/linux64/NOTICE
