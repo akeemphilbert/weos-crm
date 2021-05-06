@@ -193,7 +193,7 @@ jobs:
           cp LICENSE build/linux64/LICENSE
           cp NOTICE build/linux64/NOTICE
           cp README.md build/linux64/README.md
-          cp -R build/apps/admin/default build/linux64/apps/admin
+          cp -R dist/* build/linux64/apps/admin
           cp build/weos-crm-linux-amd64 build/linux64/weos-crm
           chmod +x build/linux64/weos-crm
           tar -czf weos-crm-linux-amd64.tar.gz -C build/linux64 .
