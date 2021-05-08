@@ -62,6 +62,8 @@ jobs:
               if curl -sL -o release.tar.gz "$URL"; then
                 echo "got most recent release $URL"
                 tar -xvzf release.tar.gz -C dist
+                mkdir -p apps/admin/default
+                cp -R dist/* apps/admin/default
               else
                 print "failed to download $URL"
               fi

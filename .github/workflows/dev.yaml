@@ -64,6 +64,8 @@ jobs:
                 tar -xvzf release.tar.gz --strip-components 1
                 yarn install
                 yarn generate
+                mkdir -p apps/admin/default
+                cp -R dist/* apps/admin/default
               else
                 print "failed to download $URL"
               fi
