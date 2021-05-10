@@ -64,6 +64,8 @@ jobs:
                 tar -xvzf release.tar.gz --strip-components 1
                 yarn install
                 yarn generate
+                mkdir -p apps/admin/default
+                cp -R dist/* apps/admin/default
               else
                 print "failed to download $URL"
               fi
@@ -93,7 +95,7 @@ jobs:
         name: build windows desktop
         with:
           xgo_version: latest
-          go_version: 1.15.x
+          go_version: 1.16.x
           dest: build
           prefix: weos-crm-desktop
           targets: windows/386,windows/amd64
@@ -107,7 +109,7 @@ jobs:
         name: build mac desktop
         with:
           xgo_version: latest
-          go_version: 1.15.x
+          go_version: 1.16.x
           dest: build
           prefix: weos-crm-desktop
           targets: darwin/amd64
@@ -121,7 +123,7 @@ jobs:
         name: build server binaries
         with:
           xgo_version: latest
-          go_version: 1.15.x
+          go_version: 1.16.x
           dest: build
           prefix: weos-crm
           targets: windows/386,windows/amd64,linux/386,linux/amd64
