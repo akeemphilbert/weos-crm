@@ -243,10 +243,6 @@ jobs:
            if curl -sL -o release.tar.gz "$URL"; then
              echo "got most recent release $URL"
              tar -xvzf release.tar.gz --strip-components 1
-
-            #run api
-            cd build/linux32
-            ./weos-crm > /dev/null && curl -sL -w "%{http_code}" -I "http://localhost:8681/customers" -o /dev/null
            else
              print "failed to download $URL"
            fi
