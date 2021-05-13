@@ -242,13 +242,7 @@ jobs:
 
             #run api
             cd build/linux32
-            ./weos-crm
-            API_CCODE=$(curl -sL -w "%{http_code}" -I "http://localhost:8681/customers" -o /dev/null)
-            if [ "$CODE" != "200" ]
-            then
-              echo "api not running"
-              exit 124
-            fi
+            ./weos-crm > /dev/null && curl -sL -w "%{http_code}" -I "http://localhost:8681/customers" -o /dev/null
            else
              print "failed to download $URL"
            fi
@@ -259,7 +253,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           build: yarn generate
-          start: yarn start
+          start: build/linux32/weos-crm > /dev/null && yarn start
       - uses: actions/upload-artifact@v2
         with:
           name: Mac OS Desktop
