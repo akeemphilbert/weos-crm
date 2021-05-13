@@ -18,8 +18,12 @@ env:
   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
   SLACK_FOOTER: copyright 2021 Wepala
   GOPRIVATE: github.com/wepala/*
-  BASE_URL: http://localhost:8681/wecrm
+  API_URL: http://localhost:8681
   BASE_PATH: /admin/
+  CYPRESS_API_URL: http://localhost:8681
+  CYPRESS_BASE_URL: http://localhost:8681
+  PORT: 8681
+  CYPRESS_IGNORE_INTERCEPTS: true
 
 jobs:
   build:
@@ -62,6 +66,12 @@ jobs:
               if curl -sL -o release.tar.gz "$URL"; then
                 echo "got most recent release $URL"
                 tar -xvzf release.tar.gz --strip-components 1
+                echo "API_URL=${API_URL}" >> .env
+                echo "BASE_PATH=${BASE_PATH}" >> .env
+                echo "CYPRESS_API_URL=${CYPRESS_API_URL}" >> .env
+                echo "CYPRESS_BASE_URL=${CYPRESS_BASE_URL}" >> .env
+                echo "CYPRESS_IGNORE_INTERCEPTS=${CYPRESS_IGNORE_INTERCEPTS}" >> .env
+                echo "PORT=${PORT}" >> .env
                 yarn install
                 yarn generate
                 mkdir -p apps/admin/default
@@ -217,7 +227,29 @@ jobs:
           cd build/win64
           zip -r  ../../weos-crm-win64.zip .
           cd ../../
-
+      - name: Prep for Cypress Run
+        run: |
+          URL="https://github.com/wepala/weos-crm-admin-default/archive/${{ github.event.inputs.admin-app-branch }}.tar.gz"
+          CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
+          echo "tried $CODE $URL"
+          #if the url doesn't return a 404 then let's download and extract
+          if [ "$CODE" != "404" ]
+          then
+           # successful
+           if curl -sL -o release.tar.gz "$URL"; then
+             echo "got most recent release $URL"
+             tar -xvzf release.tar.gz --strip-components 1
+           else
+             print "failed to download $URL"
+           fi
+           exit 0
+          fi
+          exit 124
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          build: yarn generate
+          start: yarn start
       - uses: actions/upload-artifact@v2
         with:
           name: Mac OS Desktop

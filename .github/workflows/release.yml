@@ -18,8 +18,6 @@ on:
         required: true
         default: master
 env:
-  BASE_URL: http://localhost:8681
-  BASE_PATH: /admin/
   SLACK_CHANNEL: wecrm
   SLACK_USERNAME: WeOS CRM
   SLACK_ICON: https://github.com/wepala.png?size=48
