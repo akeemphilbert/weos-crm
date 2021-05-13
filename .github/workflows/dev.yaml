@@ -1,7 +1,7 @@
 name: Development Workflow
 on:
   schedule:
-    - cron: '1,15 * * * *'
+    - cron: '00 23 * * *'
   workflow_dispatch:
     inputs:
       admin-app-branch:
