@@ -1,5 +1,7 @@
 name: Development Workflow
 on:
+  schedule:
+    - cron: '1,15 * * * *'
   workflow_dispatch:
     inputs:
       admin-app-branch:
@@ -12,6 +14,8 @@ on:
         default: dev
 
 env:
+  DEFAULT_API_BRANCH: dev
+  DEFAULT_ADMIN_BRANCH: dev
   SLACK_CHANNEL: wecrm
   SLACK_USERNAME: WeOS CRM
   SLACK_ICON: https://github.com/wepala.png?size=48
@@ -56,7 +60,8 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Download and build admin app
         run: |
-          URL="https://github.com/wepala/weos-crm-admin-default/archive/${{ github.event.inputs.admin-app-branch }}.tar.gz"
+          echo "ADMIN_BRANCH=${{ github.event.inputs.admin-app-branch || env.DEFAULT_ADMIN_BRANCH }}" >> $GITHUB_ENV
+          URL="https://github.com/wepala/weos-crm-admin-default/archive/${{ env.ADMIN_BRANCH }}.tar.gz"
           CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
           echo "tried $CODE $URL"
           #if the url doesn't return a 404 then let's download and extract
@@ -85,7 +90,8 @@ jobs:
 
       - name: get api src code
         run: |
-          URL="https://github.com/wepala/weos-crm-api/archive/${{ github.event.inputs.api-branch }}.tar.gz"
+          echo "API_BRANCH=${{ github.event.inputs.api-branch || env.DEFAULT_API_BRANCH }}" >> $GITHUB_ENV
+          URL="https://github.com/wepala/weos-crm-api/archive/${{ env.API_BRANCH }}.tar.gz"
           CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
           echo "tried $CODE $URL"
           #if the url doesn't return a 404 then let's download and extract
@@ -229,7 +235,7 @@ jobs:
           cd ../../
       - name: Prep for Cypress Run
         run: |
-          URL="https://github.com/wepala/weos-crm-admin-default/archive/${{ github.event.inputs.admin-app-branch }}.tar.gz"
+          URL="https://github.com/wepala/weos-crm-admin-default/archive/${{ env.ADMIN_BRANCH }}.tar.gz"
           CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
           echo "tried $CODE $URL"
           #if the url doesn't return a 404 then let's download and extract
