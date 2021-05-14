@@ -1,7 +1,7 @@
 name: Development Workflow
 on:
   schedule:
-    - cron: '1,15 * * * *'
+    - cron: '00 23 * * *'
   workflow_dispatch:
     inputs:
       admin-app-branch:
@@ -25,7 +25,7 @@ env:
   API_URL: http://localhost:8681
   BASE_PATH: /admin/
   CYPRESS_API_URL: http://localhost:8681
-  CYPRESS_BASE_URL: http://localhost:8681
+  CYPRESS_BASE_URL: http://localhost:8681/admin
   PORT: 8681
   CYPRESS_IGNORE_INTERCEPTS: true
 
@@ -243,6 +243,8 @@ jobs:
            if curl -sL -o release.tar.gz "$URL"; then
              echo "got most recent release $URL"
              tar -xvzf release.tar.gz --strip-components 1
+             ls -al ./build/linux32/weos-crm
+             ./build/linux32/weos-crm > /dev/null &
            else
              print "failed to download $URL"
            fi
