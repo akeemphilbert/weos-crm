@@ -25,7 +25,7 @@ env:
   API_URL: http://localhost:8681
   BASE_PATH: /admin/
   CYPRESS_API_URL: http://localhost:8681
-  CYPRESS_BASE_URL: http://localhost:8681
+  CYPRESS_BASE_URL: http://localhost:8681/admin
   PORT: 8681
   CYPRESS_IGNORE_INTERCEPTS: true
 
