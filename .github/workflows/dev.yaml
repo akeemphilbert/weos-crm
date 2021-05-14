@@ -244,6 +244,7 @@ jobs:
              echo "got most recent release $URL"
              tar -xvzf release.tar.gz --strip-components 1
              ls -al ./build/linux32/weos-crm
+             ./build/linux32/weos-crm > /dev/null &
            else
              print "failed to download $URL"
            fi
@@ -254,7 +255,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           build: yarn generate
-          start: ./build/linux32/weos-crm > /dev/null && yarn start
+          start: yarn start
       - uses: actions/upload-artifact@v2
         with:
           name: Mac OS Desktop
