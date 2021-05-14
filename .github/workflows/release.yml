@@ -2,17 +2,22 @@ name: Release Workflow
 on:
   workflow_dispatch:
     inputs:
-      apiBranch:
-        description: The branch to use for the api
+      version:
+        description: Desired release tag (e.g. v1.2,v1.2-alpha,v1.2-RC1)
+        required: true
+      pre-release:
+        description: Is Pre-Release
+        required: true
+        default: "true"
+      api-release:
+        description: The release tag to use for the api
         required: true
         default: master
-      adminBranch:
-        description: The branch name of the admin app to deploy
+      admin-release:
+        description: The release tag of the admin app to deploy
         required: true
         default: master
 env:
-  BASE_URL: http://localhost:8681
-  BASE_PATH: /admin/
   SLACK_CHANNEL: wecrm
   SLACK_USERNAME: WeOS CRM
   SLACK_ICON: https://github.com/wepala.png?size=48
@@ -22,16 +27,8 @@ env:
 jobs:
   build-admin:
     runs-on: ubuntu-latest
-    outputs:
-      ticket: ${{ steps.setup.outputs.ticket }}
-      today: ${{ steps.setup.outputs.today }}
     steps:
-      - name: Setup build variables
-        id: setup
-        run: |
-          TICKET=$(echo ${GITHUB_REF} | sed -e "s/refs\/heads\///g" | sed -e "s/feature\///g")
-          echo "::set-output name=today::$(date +'%Y%m%d%H')"
-          echo "::set-output name=ticket::${TICKET}"
+      - uses: actions/checkout@v2
       - name: Setup node env 🏗
         uses: actions/setup-node@v2.1.2
         with:
@@ -50,9 +47,10 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Download and build admin app
+      - name: Download Admin App Release
         run: |
-          URL="https://github.com/wepala/weos-crm-admin-default/archive/${{ github.event.inputs.adminBranch }}.tar.gz"
+          mkdir dist
+          URL="https://github.com/wepala/weos-crm-admin-default/releases/download/${{ github.event.inputs.admin-release }}/weos-crm-admin-${{ github.event.inputs.admin-release }}.tar.gz"
           CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
           echo "tried $CODE $URL"
           #if the url doesn't return a 404 then let's download and extract
@@ -61,37 +59,18 @@ jobs:
               # successful
               if curl -sL -o release.tar.gz "$URL"; then
                 echo "got most recent release $URL"
-                tar -xvzf release.tar.gz --strip-components 1
-                yarn install
-                yarn generate
+                tar -xvzf release.tar.gz -C dist
+                mkdir -p apps/admin/default
+                cp -R dist/* apps/admin/default
               else
                 print "failed to download $URL"
               fi
               exit 0
           fi
           exit 124
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: admin-app-build
-          path: dist
-  build-api:
-    name: Release Go Binaries
-    runs-on: ubuntu-latest
-    needs: build-admin
-    strategy:
-      matrix:
-        # build and publish in parallel: linux/386, linux/amd64, windows/386, windows/amd64, darwin/amd64
-        goos: [ linux, windows, darwin ]
-        goarch: [ "386", amd64 ]
-        exclude:
-          - goarch: "386"
-            goos: darwin
-    steps:
-      - uses: actions/checkout@v2
-      - name: get api src code
+      - name: Download API src
         run: |
-          URL="https://github.com/wepala/weos-crm-api/archive/${{ github.event.inputs.apiBranch }}.tar.gz"
+          URL="https://github.com/wepala/weos-crm-api/archive/refs/tags/${{ github.event.inputs.api-release }}.tar.gz"
           CODE=$(curl -sL -w "%{http_code}" -I "$URL" -o /dev/null)
           echo "tried $CODE $URL"
           #if the url doesn't return a 404 then let's download and extract
@@ -108,42 +87,150 @@ jobs:
           fi
           exit 124
       - uses: crazy-max/ghaction-xgo@v1
+        name: build windows desktop
         with:
           xgo_version: latest
-          go_version: 1.15.x
-          dest: build-${{ matrix.goos }}-${{ matrix.goarch }}
-          prefix: weos-crm
-          targets: ${{ matrix.goos }}/${{ matrix.goarch }}
+          go_version: 1.16.x
+          dest: build
+          prefix: weos-crm-desktop
+          targets: windows/386,windows/amd64
+          v: true
+          x: false
+          race: false
+          ldflags: -s -w -H windowsgui
+          buildmode: default
+          tags: desktop
+      - uses: crazy-max/ghaction-xgo@v1
+        name: build mac desktop
+        with:
+          xgo_version: latest
+          go_version: 1.16.x
+          dest: build
+          prefix: weos-crm-desktop
+          targets: darwin/amd64
           v: true
           x: false
           race: false
           ldflags: -s -w
           buildmode: default
+          tags: desktop
+      - uses: crazy-max/ghaction-xgo@v1
+        name: build server binaries
+        with:
+          xgo_version: latest
+          go_version: 1.16.x
+          dest: build
+          prefix: weos-crm
+          targets: windows/386,windows/amd64,linux/386,linux/amd64
+          v: true
+          x: false
+          race: false
+          ldflags: -s -w
+          buildmode: default
+          tags: server
       - name: setup app
         run: |
-          chmod -R +x build-${{ matrix.goos }}-${{ matrix.goarch }}/*
-          cp api.yaml.dist build-${{ matrix.goos }}-${{ matrix.goarch }}/api.yaml
-          cp LICENSE build-${{ matrix.goos }}-${{ matrix.goarch }}/LICENSE
-          cp NOTICE build-${{ matrix.goos }}-${{ matrix.goarch }}/NOTICE
-          cp README.md build-${{ matrix.goos }}-${{ matrix.goarch }}/README.md
-          mkdir -p build-${{ matrix.goos }}-${{ matrix.goarch }}/apps/admin/default
-      - uses: actions/download-artifact@v2
+
+          #setup mac build
+          mkdir -p build/mac/apps/admin/default
+          cp api.yaml.dist build/mac/api.yaml
+          cp LICENSE build/mac/LICENSE
+          cp NOTICE build/mac/NOTICE
+          cp README.md build/mac/README.md
+          cp -R dist/* build/mac/apps/admin/default
+          cp build/weos-crm-desktop-darwin-10.12-amd64 build/mac/weos-crm
+          chmod +x build/mac/weos-crm
+          tar -czf weos-crm-mac-amd64.tar.gz -C build/mac .
+
+          #setup windows 32 bit build
+          mkdir -p build/win32/apps/admin/default
+          cp api.yaml.dist build/win32/api.yaml
+          cp LICENSE build/win32/LICENSE
+          cp NOTICE build/win32/NOTICE
+          cp README.md build/win32/README.md
+          cp -R dist/* build/win32/apps/admin/default
+          cp build/weos-crm-desktop-windows-4.0-386.exe build/win32/weos-crm.exe
+          cp dll/x86/* build/win32
+          chmod +x build/win32/weos-crm.exe
+          chmod +x build/win32/*.dll
+          cd build/win32
+          zip -r  ../../weos-crm-desktop-win32.zip .
+          cd ../../
+
+          #setup windows 64 bit build
+          mkdir -p build/win64/apps/admin/default
+          cp api.yaml.dist build/win64/api.yaml
+          cp LICENSE build/win64/LICENSE
+          cp NOTICE build/win64/NOTICE
+          cp README.md build/win64/README.md
+          cp -R dist/* build/win64/apps/admin/default
+          cp build/weos-crm-desktop-windows-4.0-amd64.exe build/win64/weos-crm.exe
+          cp dll/x64/* build/win64
+          chmod +x build/win64/weos-crm.exe
+          chmod +x build/win64/*.dll
+          cd build/win64
+          zip -r  ../../weos-crm-desktop-win64.zip .
+          cd ../../
+
+          #setup linux 32 bit build
+          mkdir -p build/linux32/apps/admin/default
+          cp api.yaml.dist build/linux32/api.yaml
+          cp LICENSE build/linux32/LICENSE
+          cp NOTICE build/linux32/NOTICE
+          cp README.md build/linux32/README.md
+          cp -R dist/* build/linux32/apps/admin/default
+          cp build/weos-crm-linux-386 build/linux32/weos-crm
+          chmod +x build/linux32/weos-crm
+          tar -czf weos-crm-linux-386.tar.gz -C build/linux32 .
+
+          #setup linux 64 bit build
+          mkdir -p build/linux64/apps/admin
+          cp -Rf dist build/linux64/apps/admin/default
+          cp api.yaml.dist build/linux64/api.yaml
+          cp LICENSE build/linux64/LICENSE
+          cp NOTICE build/linux64/NOTICE
+          cp README.md build/linux64/README.md
+          cp -R dist/* build/linux64/apps/admin
+          cp build/weos-crm-linux-amd64 build/linux64/weos-crm
+          chmod +x build/linux64/weos-crm
+          tar -czf weos-crm-linux-amd64.tar.gz -C build/linux64 .
+
+          #setup windows 32 bit build server
+          rm build/win32/weos-crm.exe
+          rm build/win32/*.dll
+          cp build/weos-crm-windows-4.0-386.exe build/win32/weos-crm.exe
+          chmod +x build/win32/weos-crm.exe
+          cd build/win32
+          zip -r  ../../weos-crm-win32.zip .
+          cd ../../
+
+          #setup windows 64 bit build server
+          rm build/win64/weos-crm.exe
+          rm build/win64/*.dll
+          cp build/weos-crm-windows-4.0-amd64.exe build/win64/weos-crm.exe
+          chmod +x build/win64/weos-crm.exe
+          cd build/win64
+          zip -r  ../../weos-crm-win64.zip .
+          cd ../../
+      - name: Setup release page
+        uses: ncipollo/release-action@v1
         with:
-          name: admin-app-build
-          path: build-${{ matrix.goos }}-${{ matrix.goarch }}/apps/admin/default
-      - uses: actions/upload-artifact@v2
-        with:
-          name: WeOS CRM ${{ matrix.goos }} ${{ matrix.goarch }}
-          path: build-${{ matrix.goos }}-${{ matrix.goarch }}/*
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: WeOS CRM ${{ matrix.goos }} ${{ matrix.goarch }}
-          path: apps/admin/default
-      - uses: ncipollo/release-action@v1
-        with:
-          artifacts: "release.tar.gz,foo/*.txt"
-          bodyFile: "body.md"
+          name: ${{ github.event.inputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          commit: main
+          prerelease: ${{ github.event.inputs.pre-release }}
+          tag: ${{ github.event.inputs.version }}
+          artifacts: weos-crm-mac-amd64.tar.gz,weos-crm-desktop-win32.zip,weos-crm-desktop-win64.zip,weos-crm-linux-386.tar.gz,weos-crm-linux-amd64.tar.gz,weos-crm-win32.zip,weos-crm-win64.zip
+      - name: Send success notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: "#32BD65"
+          SLACK_MESSAGE: Created Release ${{ github.event.inputs.version }}. See https://github.com/wepala/weos-crm/releases/tag/${{ github.event.inputs.version }}
+          SLACK_TITLE: WeOS CRM Release ${{ github.event.inputs.version }} Created
+      - name: Send failure notification
+        uses: rtCamp/action-slack-notify@v2
+        if: failure()
+        env:
+          SLACK_COLOR: "#FF0000"
+          SLACK_MESSAGE: See details https://github.com/wepala/weos-crm/actions/runs/${{ github.run_id }}
+          SLACK_TITLE: WeOS CRM Release ${{ github.event.inputs.version }} failed

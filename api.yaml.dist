@@ -128,7 +128,7 @@ paths:
       x-weos-config:
         group: True
         middleware:
-          - DefaultAdmin
+          - AdminContent
       responses:
         200:
           description: View Admin app
