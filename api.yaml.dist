@@ -136,6 +136,118 @@ paths:
           description: User is not authenticated
         403:
           description: User is authenticated but is not authorized to access this list
+   /request-type:
+    summary: Get a list of request types
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+      - in: query
+        name: limit
+        schema:
+          type: integer
+      - in: query
+        name: sort
+        schema:
+          type: array
+          items:
+            type: string
+      - in: query
+        name: sort_type
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+    get:
+      operationId: List Request Types
+      x-weos-config:
+        handler: GetRequestTypes
+      responses:
+        200:
+          description: List of Request Types
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestTypeList"
+        400:
+          description: Bad Request
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
+    post:
+      operationId: Create Request Type
+      x-weos-config:
+        handler: CreateRequestType
+      requestBody:
+        description: Create a request type
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestType"
+      responses:
+        201:
+          description: Create a Request Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestType"
+        400:
+          description: Bad Request
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
+  /request-type/{id}:
+    get:
+      operationId: Get Request Type Details
+      x-weos-config:
+        handler: GetRequestType
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the request type
+      responses:
+        200:
+          description: Get request type
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
+    put:
+      operationId: Update Request Type
+      x-weos-config:
+        handler: UpdateRequestType
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the request type
+      requestBody:
+        description: Update a request type
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestType"
+      responses:
+        200:
+          description: Request Type updated
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
 components:
   schemas:
     CategorizedValue:
@@ -211,5 +323,50 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Customer'
+    RequestType:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        tasks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Task"
+        additionalFields:
+          type: array
+          items:
+            $ref: "#/components/schemas/StringField"
+    RequestTypeList:
+      type: object
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestType"
+    Task:
+      type: object
+      properties:
+        title:
+          type: string
+        dueDate:
+          type: integer
+    StringField:
+      type: object
+      properties:
+        type:
+          type: string
+        name:
+          type: string
+        value:
+          type: string
+
 
 
