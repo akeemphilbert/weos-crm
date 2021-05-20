@@ -14,8 +14,8 @@ Feature: I should be able to create a customer
       
   
   Scenario: Create a customer with name only
-    When Lynissa enters a customer name "Barry"
-    And Lynissa hits the submit button 
+    Given Lynissa enters a customer name "Barry"
+    When Lynissa hits the submit button
     Then a new customer should be created with the name "Barry"
     And Lynissa should be notified that the customer was created
     And Lynissa should be shown the customer list with "Barry" in it
