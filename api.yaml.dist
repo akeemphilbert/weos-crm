@@ -136,7 +136,7 @@ paths:
           description: User is not authenticated
         403:
           description: User is authenticated but is not authorized to access this list
-   /request-type:
+  /request-type:
     summary: Get a list of request types
     parameters:
       - in: query
