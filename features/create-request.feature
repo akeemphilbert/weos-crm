@@ -1,3 +1,4 @@
+@WEOS-969
 Feature: As a CSR, I should be able to create a Request for a Customer so that the team can address it
 
   Background:
@@ -72,13 +73,14 @@ Feature: As a CSR, I should be able to create a Request for a Customer so that t
     And Lynissa selects "Maria" as the customer
     And only the standard Request fields are visible
     And Lynissa selects "Bug" as the request type
-    And Lynissa enters "Android" for the "Platform" field
+    And Lynissa enters "Android" for the "platform" field
     And Lynissa checks the "Confirmed" checkbox
     When Lynissa saves the Request
     Then A Request with the title "Some Bug" should be created
     And the Request should have a type "Bug"
     And the Request should have a customer "Maria"
     And the Request should have a description "I need help"
+    And the Request should have an extra field "platform" with value "Android"
     And the Request should have tasks
       | title         | completed |
       | Update File   | false     |

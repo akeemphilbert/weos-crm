@@ -1,3 +1,4 @@
+@WEOS-1036
 Feature: As an Admin, I should be able to delete a Request Type so that it is no longer available
 
   Background:
@@ -17,9 +18,9 @@ Feature: As an Admin, I should be able to delete a Request Type so that it is no
       | Maria    | 1st Customer.  | ic, webooks | personal        | maria@example.org    | work            | maria.work@example.org | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
       | James    | 2nd Customer.  | webooks     | work            | james@example.org    |                 |                        | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
     And the CRM already has a requests
-      | id | title        | description                       | request type          | customer |  platform |
-      | 1  | No Price     | The product doesn't have a price  | Bug                   | Maria    | web       |
-      | 2  | Add Courier  | Add Jetbox as a courier           | New Feature           | James    | web       |
+      | id | title        | description                       | request type          | customer |  platform | status | assignee | customer | priority | last updated              | created                   |
+      | 1  | No Price     | The product doesn't have a price  | Bug                   | Maria    | web       | to do  | lynissa  | Maria    | low      | 2021-05-122T07:20:50.52Z  | 2021-05-122T07:20:50.52Z  |
+      | 2  | Add Courier  | Add Jetbox as a courier           | New Feature           | James    | web       | done   | lynissa  | Jame     | High     | 2021-05-022T07:20:50.52Z  | 2021-05-122T07:20:50.52Z  |
     And Oleta is editing the "Bug" Request Type
 
   Scenario: Delete request type
