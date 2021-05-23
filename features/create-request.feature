@@ -44,12 +44,16 @@ Feature: As a CSR, I should be able to create a Request for a Customer so that t
     When Lynissa saves the customer
     Then the customer "Harriet Tubman" should be filled in as the customer in the create Request form
   
-  Scenario: Create a Request with multiple customers
+  Scenario: Create a Request with multiple followers
     Given Lynissa searches for "Maria"
     And Lynissa selects "Maria" as the customer
-    And Lynissa select option to add another customer
     And Lynissa searches for "James"
-    And Lynissa selects "James" as the customer
+    And Lynissa selects "James" as the follower
+    And Lynissa select option to add another follower
+    And Lynissa selected the option to create a customer
+    And Lynissa enters "Harriet Tubman" as the name
+    And Lynissa enters "harriet.tubman@example.org" as the email address
+    And Lynissa saves the customer
     And Lynissa selects "New Feature" as the request type
     And Lynissa enters "Some New Feature" as the request title
     And Lynissa enters "Do something new" as the request description
@@ -57,7 +61,8 @@ Feature: As a CSR, I should be able to create a Request for a Customer so that t
     Then A Request with the title "Some New Feature" should be created
     And the Request should have a type "New Feature"
     And the Request should have a customer "Maria"
-    And the Request should have a customer "James"
+    And the Request should have a follower "James"
+    And the Request should have a follower "Harriet Tubman"
     And the Request should have a description "I need help"
 
   Scenario: Choose custom Request Type to see additional fields
