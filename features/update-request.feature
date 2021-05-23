@@ -10,8 +10,8 @@ Feature: As a CSR, I should be able to update a Request so that I can keep track
       | James    | 2nd Customer.  | webooks     | work            | james@example.org    |                 |                        | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
     And the CRM already has requests
       | id | title        | description                       | request type          | customer |  platform | status | assignee | customer | priority | last updated              | created                   |
-      | 1  | No Price     | The product doesn't have a price  | Bug                   | Maria    | web       | to do  | lynissa  | Maria    | low      | 2021-05-122T07:20:50.52Z  | 2021-05-122T07:20:50.52Z  |
-      | 2  | Add Courier  | Add Jetbox as a courier           | New Feature           | James    | web       | done   | lynissa  | Jame     | High     | 2021-05-022T07:20:50.52Z  | 2021-05-122T07:20:50.52Z  |
+      | 1  | No Price     | The product doesn't have a price  | Bug                   | Maria    | web       | to do  | lynissa  | Maria    | low      | 2021-05-12T07:20:50.52Z  | 2021-05-12T07:20:50.52Z  |
+      | 2  | Add Courier  | Add Jetbox as a courier           | New Feature           | James    | web       | done   | lynissa  | Jame     | High     | 2021-05-02T07:20:50.52Z  | 2021-05-12T07:20:50.52Z  |
 
     And the CRM already has Request Types
       | title         | description       |
