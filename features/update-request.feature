@@ -8,7 +8,7 @@ Feature: As a CSR, I should be able to update a Request so that I can keep track
       | name     | notes          | tags        | email1 category | email1 address       | email2 category | email2 address         | phone        | address1 | address2        | city      | country             |
       | Maria    | 1st Customer.  | ic, webooks | personal        | maria@example.org    | work            | maria.work@example.org | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
       | James    | 2nd Customer.  | webooks     | work            | james@example.org    |                 |                        | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
-    And the CRM already has a requests
+    And the CRM already has requests
       | id | title        | description                       | request type          | customer |  platform | status | assignee | customer | priority | last updated              | created                   |
       | 1  | No Price     | The product doesn't have a price  | Bug                   | Maria    | web       | to do  | lynissa  | Maria    | low      | 2021-05-122T07:20:50.52Z  | 2021-05-122T07:20:50.52Z  |
       | 2  | Add Courier  | Add Jetbox as a courier           | New Feature           | James    | web       | done   | lynissa  | Jame     | High     | 2021-05-022T07:20:50.52Z  | 2021-05-122T07:20:50.52Z  |
@@ -30,6 +30,7 @@ Feature: As a CSR, I should be able to update a Request so that I can keep track
     When Lynissa is updating a Request with id 1
     Then the text field "Platform" should appear
     And the checkbox "Confirmed" should appear
+    And the Request should have a task "Update File"
 
   Scenario: Update basic request details
     Given Lynissa is updating a Request with id 1
@@ -57,6 +58,7 @@ Feature: As a CSR, I should be able to update a Request so that I can keep track
     When Lynissa saves the Request
     Then the Request should have a "type" with value "New Request"
     And the last updated date should be the current date
+    Then the task "Update File" should be deleted
     But the Request should have an extra field "platform" with value "web"
 
 
