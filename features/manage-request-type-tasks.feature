@@ -1,15 +1,21 @@
+@WEOS-964
 Feature: As an Admin, I should be able to manage tasks to a Request Type so that tasks are automatically added to requests that are created with this type
 
   Background:
     Given an Admin named "Oleta"
     And Oleta has permissions to manage request types
     And the CRM already has Request Types
-      | title | description |
-      | Bug   |             |
+      | title          | description |
+      | Bug            |             |
+      | New Feature    |             |
     And the due date is specified in days
     And the "Bug" Request Type has tasks
       | title         | due date  |
       | Update File   | 2         |
+    And the "New Feature" Request Type has tasks
+      | title    | due date  |
+      | Step 1   | 2         |
+      | Step 2   | 2         |
     And Oleta is editing the "Bug" Request Type
     
   Scenario: Add tasks to Request Type
