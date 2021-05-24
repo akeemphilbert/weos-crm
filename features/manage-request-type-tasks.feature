@@ -16,10 +16,10 @@ Feature: As an Admin, I should be able to manage tasks to a Request Type so that
       | title    | due date  |
       | Step 1   | 2         |
       | Step 2   | 2         |
-    And Oleta is editing the "Bug" Request Type
     
   Scenario: Add tasks to Request Type
-    Given Oleta adds a new task
+    Given Oleta is editing the "Bug" Request Type
+    And Oleta adds a new task
     And Oleta enters "Step 1" as the task title
     And Oleta enters 2 as the task due date
     When Oleta saves the Request Type
@@ -29,7 +29,7 @@ Feature: As an Admin, I should be able to manage tasks to a Request Type so that
       | Step 1        | 2         |
     
   Scenario: Remove task from Request Type
-    Given A Request Type named "New Feature" exists
+    Given Oleta is editing the "New Feature" Request Type
     And the Request Type has a task "Step 1" as task
     And the Request Type has a task "Step 2" as task
     When Akeem deletes "Step 2"
@@ -43,6 +43,7 @@ Feature: As an Admin, I should be able to manage tasks to a Request Type so that
       | title         | due date  |
       | Update File   | 2         |
       | Step 1        | 2         |
+    And Oleta is editing the "Bug" Request Type
     And Oleta deletes the task "Update File"
     When Oleta saves the Request Type
     Then the "Bug" Request Type should have tasks
