@@ -32,6 +32,7 @@ Feature: As a CSR, I should be able to create a Request for a Customer so that t
     And Lynissa enters "Do something new" as the request description
     When Lynissa saves the Request
     Then A Request with the title "Some New Feature" should be created
+    And Lynissa should be redirected to the view page for the created request
     And the Request should have a type "New Feature"
     And the Request should have a customer "Maria"
     And the Request should have a description "Do something new"
@@ -82,6 +83,7 @@ Feature: As a CSR, I should be able to create a Request for a Customer so that t
     And Lynissa checks the "Confirmed" checkbox
     When Lynissa saves the Request
     Then A Request with the title "Some Bug" should be created
+    And Lynissa should be redirected to the view page for the created request
     And the Request should have a type "Bug"
     And the Request should have a customer "Maria"
     And the Request should have a description "I need help"

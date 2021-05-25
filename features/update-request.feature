@@ -56,6 +56,7 @@ Feature: As a CSR, I should be able to update a Request so that I can change the
     Then the Request should have a "type" with value "New Request"
     And the last updated date should be the current date
     Then the task "Update File" should be deleted
-    But the Request should have an extra field "platform" with value "web"
+    And the Request should have an extra field "platform" with value "web"
+    But the field "platform" should NOT be visible
 
 
