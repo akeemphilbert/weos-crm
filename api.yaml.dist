@@ -65,7 +65,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerList'
+                $ref: "#/components/schemas/CustomerList"
         400:
           description: Bad Request
         401:
@@ -82,21 +82,39 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Customer'
+              $ref: "#/components/schemas/Customer"
       responses:
         201:
           description: Create a Customer
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Customer'
+                $ref: "#/components/schemas/Customer"
         400:
           description: Bad Request
         401:
           description: User is not authenticated
         403:
-          description: User is authenticated but is not authorized to access this list      
+          description: User is authenticated but is not authorized to access this list
   /customer/{id}:
+    get:
+      operationId: Get Customer Details
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the customer
+      x-weos-config:
+        handler: GetCustomer
+      responses:
+        200:
+          description: Get customer
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
     put:
       operationId: Update Customer
       parameters:
@@ -112,9 +130,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Customer'
+              $ref: "#/components/schemas/Customer"
       x-weos-config:
-        handler: CreateCustomer
+        handler: UpdateCustomer
       responses:
         200:
           description: Customer updated
@@ -122,7 +140,7 @@ paths:
           description: User is not authenticated
         403:
           description: User is authenticated but is not authorized to access this list
-  /admin:
+  /admin*:
     get:
       operationId: Admin
       x-weos-config:
@@ -293,23 +311,23 @@ components:
         organizations:
           type: array
           items:
-            $ref: '#/components/schemas/Organization'
+            $ref: "#/components/schemas/Organization"
         emails:
           type: array
           items:
-            $ref: '#/components/schemas/CategorizedValue'
+            $ref: "#/components/schemas/CategorizedValue"
         phones:
           type: array
           items:
-            $ref: '#/components/schemas/CategorizedValue'
+            $ref: "#/components/schemas/CategorizedValue"
         websites:
           type: array
           items:
-            $ref: '#/components/schemas/CategorizedValue'
+            $ref: "#/components/schemas/CategorizedValue"
         addresses:
           type: array
           items:
-            $ref: '#/components/schemas/Address'
+            $ref: "#/components/schemas/Address"
     CustomerList:
       type: object
       properties:
@@ -322,7 +340,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/Customer'
+            $ref: "#/components/schemas/Customer"
     RequestType:
       type: object
       properties:
@@ -367,6 +385,3 @@ components:
           type: string
         value:
           type: string
-
-
-
