@@ -64,7 +64,7 @@ Feature: As a CSR, I should be able to create a Request for a Customer so that t
     And the Request should have a customer "Maria"
     And the Request should have a follower "James"
     And the Request should have a follower "Harriet Tubman"
-    And the Request should have a description "I need help"
+    And the Request should have a description "Do something new"
 
   Scenario: Choose custom Request Type to see additional fields
     Given Lynissa searches for "Maria"
@@ -78,12 +78,13 @@ Feature: As a CSR, I should be able to create a Request for a Customer so that t
     Given Lynissa searches for "Maria"
     And Lynissa selects "Maria" as the customer
     And only the standard Request fields are visible
+    And Lynissa enters "Some Bug" as the request title
+    And Lynissa enters "I need help" as the request description
     And Lynissa selects "Bug" as the request type
     And Lynissa enters "Android" for the "platform" field
     And Lynissa checks the "Confirmed" checkbox
     When Lynissa saves the Request
     Then A Request with the title "Some Bug" should be created
-    And Lynissa should be redirected to the view page for the created request
     And the Request should have a type "Bug"
     And the Request should have a customer "Maria"
     And the Request should have a description "I need help"
@@ -92,6 +93,3 @@ Feature: As a CSR, I should be able to create a Request for a Customer so that t
       | title         | completed |
       | Update File   | false     |
     And the task "Update File" should be due "6:00 PM" 2 days from creation date
-
-
-    
