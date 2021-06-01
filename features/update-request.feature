@@ -8,16 +8,15 @@ Feature: As a CSR, I should be able to update a Request so that I can change the
       | name     | notes          | tags        | email1 category | email1 address       | email2 category | email2 address         | phone        | address1 | address2        | city      | country             |
       | Maria    | 1st Customer.  | ic, webooks | personal        | maria@example.org    | work            | maria.work@example.org | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
       | James    | 2nd Customer.  | webooks     | work            | james@example.org    |                 |                        | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
-    And the CRM already has requests
-      | id | title        | description                       | request type          | customer |  platform | status | assignee | customer | priority | last updated              | created                   |
-      | 1  | No Price     | The product doesn't have a price  | Bug                   | Maria    | web       | to do  | lynissa  | Maria    | low      | 2021-05-12T07:20:50.52Z  | 2021-05-12T07:20:50.52Z  |
-      | 2  | Add Courier  | Add Jetbox as a courier           | New Feature           | James    | web       | done   | lynissa  | Jame     | High     | 2021-05-02T07:20:50.52Z  | 2021-05-12T07:20:50.52Z  |
-
     And the CRM already has Request Types
       | title         | description       |
       | New Feature   |                   |
       | Bug           |                   |
       | Kudos         |                   |
+    And the CRM already has requests
+      | id | title        | description                       | request type          | customer |  platform | status | assignee | customer | priority | last updated              | created                   |
+      | 1  | No Price     | The product doesn't have a price  | Bug                   | Maria    | web       | to do  | lynissa  | Maria    | low      | 2021-05-12T07:20:50.52Z  | 2021-05-12T07:20:50.52Z  |
+      | 2  | Add Courier  | Add Jetbox as a courier           | New Feature           | James    | web       | done   | lynissa  | James    | High     | 2021-05-02T07:20:50.52Z  | 2021-05-12T07:20:50.52Z  |
     And the "Bug" Request Type has fields
       | title        | type     |
       | Platform     | Text     |
@@ -51,12 +50,9 @@ Feature: As a CSR, I should be able to update a Request so that I can change the
   Scenario: Update request type
     Given Lynissa is viewing a Request with id 1
     And Lynissa selects the edit button
-    And Lynissa selects "New Request" as the request type
+    And Lynissa selects "New Feature" as the request type
     When Lynissa saves the Request
-    Then the Request should have a "type" with value "New Request"
+    Then the Request should have a "type" with value "New Feature"
     And the last updated date should be the current date
     Then the task "Update File" should be deleted
-    And the Request should have an extra field "platform" with value "web"
-    But the field "platform" should NOT be visible
-
-
+    But the Request should have an extra field "platform" with value "web"
