@@ -4,7 +4,6 @@ Feature: As a CSR, I should be able to create a Request for a Customer so that t
   Background:
     Given a CSR named "Lynissa"
     And Lynissa has permissions to create requests
-    And Lynissa is on the screen to create a request
     And the CRM already has a few users
 
       | name  | notes         | tags        | email1 category | email1 address    | email2 category | email2 address         | phone        | address1 | address2        | city      | country             |
@@ -23,8 +22,8 @@ Feature: As a CSR, I should be able to create a Request for a Customer so that t
     And the "Bug" Request Type has tasks
       | title       | due date |
       | Update File | 2        |
+    And Lynissa is on the screen to create a request
 
-  @focus
   Scenario: Create Request for an existing Customer
     Given Lynissa searches for "Maria"
     And Lynissa selects "Maria" as the customer
