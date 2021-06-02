@@ -5,13 +5,13 @@ Feature: As a CSR, I should be able to manage tasks on a request so that I can m
     Given a CSR named "Lynissa"
     And Lynissa has permissions to update requests
     And the CRM already has a few users
-      | name     | notes          | tags        | email1 category | email1 address       | email2 category | email2 address         | phone        | address1 | address2        | city      | country             |
-      | Maria    | 1st Customer.  | ic, webooks | personal        | maria@example.org    | work            | maria.work@example.org | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
-      | James    | 2nd Customer.  | webooks     | work            | james@example.org    |                 |                        | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
+      | name  | notes         | tags        | email1 category | email1 address    | email2 category | email2 address         | phone        | address1 | address2        | city      | country             |
+      | Maria | 1st Customer. | ic, webooks | personal        | maria@example.org | work            | maria.work@example.org | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
+      | James | 2nd Customer. | webooks     | work            | james@example.org |                 |                        | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
     And the CRM already has requests
-      | id | title        | description                       | request type          | customer |  platform | status | assignee | customer | priority | last updated              | created                   | task   |
-      | 1  | No Price     | The product doesn't have a price  | Bug                   | Maria    | web       | to do  | lynissa  | Maria    | low      | 2021-05-122T07:20:50.52Z  | 2021-05-122T07:20:50.52Z  | Task 1 |
-      | 2  | Add Courier  | Add Jetbox as a courier           | New Feature           | James    | web       | done   | lynissa  | Jame     | High     | 2021-05-022T07:20:50.52Z  | 2021-05-122T07:20:50.52Z  |        |
+      | id | title       | description                      | request type | customer | platform | status | assignee | customer | priority | last updated             | created                  | task   |
+      | 1  | No Price    | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | Maria    | low      | 2021-05-122T07:20:50.52Z | 2021-05-122T07:20:50.52Z | Task 1 |
+      | 2  | Add Courier | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  | Jame     | High     | 2021-05-022T07:20:50.52Z | 2021-05-122T07:20:50.52Z |        |
     And Lynissa is updating a Request with id 1
 
   Scenario: Add new task
