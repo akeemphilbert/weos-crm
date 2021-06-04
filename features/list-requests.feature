@@ -37,7 +37,6 @@ Feature: As a CSR, I should be able to see a list of requests so that address th
     And the default number of items per page is 10
     And and options for the no of items per page are 10,20,100
 
-  @focus
   Scenario: Default list of requests
     When Lynissa visits page for the first time
     Then the "start date" filter should be 30 days from the current day
