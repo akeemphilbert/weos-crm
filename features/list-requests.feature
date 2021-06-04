@@ -4,7 +4,6 @@ Feature: As a CSR, I should be able to see a list of requests so that address th
   Background:
     Given a CSR named "Lynissa"
     And Lynissa has permissions to view requests
-    And Lynissa is on the screen to view requests
     And the CRM already has a few users
 
       | name    | notes         | tags        | email1 category | email1 address      | email2 category | email2 address         | phone        | address1 | address2        | city      | country             |
@@ -22,7 +21,7 @@ Feature: As a CSR, I should be able to see a list of requests so that address th
       | Support     |             |
     And the CRM already has requests
       | id | title                        | description                      | request type | customer | platform | status | assignee | follower1 | follower2 | priority | last updated            | created                 |
-      | 1  | No Price                     | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | James     | Akeem     | low      | 2021-05-12T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
+      | 1  | No Price                     | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | James     | Akeem     | Low      | 2021-05-12T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
       | 2  | Add Courier                  | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  | NKeche    | Oleta     | High     | 2021-05-22T07:20:50.52Z | 2021-05-21T07:20:50.52Z |
       | 3  | How does this work           | How does this work               | New Feature  | Andy     | web      | done   | lynissa  | Francis   | Oleta     | Medium   | 2021-05-22T07:20:50.52Z | 2021-05-23T07:20:50.52Z |
       | 4  | Do you have this product     | Do you have this product         | New Feature  | NKeche   | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-04-12T07:20:50.52Z |
@@ -34,6 +33,7 @@ Feature: As a CSR, I should be able to see a list of requests so that address th
       | 10 | Bulk actions                 | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-02-12T07:20:50.52Z |
       | 11 | Company List                 | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-01-12T07:20:50.52Z |
       | 12 | Integrate Facebook Messenger | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-01-12T07:20:50.52Z | 2021-01-12T07:20:50.52Z |
+    And Lynissa is on the screen to view requests
     And the default number of items per page is 10
     And and options for the no of items per page are 10,20,100
 
@@ -49,7 +49,7 @@ Feature: As a CSR, I should be able to see a list of requests so that address th
       | id | title                     | description                      | request type | customer | platform | status | assignee | follower1 | follower2 | priority | last updated            | created                 |
       | 3  | How does this work        | How does this work               | New Feature  | Andy     | web      | done   | lynissa  | Francis   | Oleta     | Medium   | 2021-05-22T07:20:50.52Z | 2021-05-23T07:20:50.52Z |
       | 2  | Add Courier               | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  | NKeche    | Oleta     | High     | 2021-05-22T07:20:50.52Z | 2021-05-21T07:20:50.52Z |
-      | 1  | No Price                  | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | James     | Akeem     | low      | 2021-05-12T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
+      | 1  | No Price                  | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | James     | Akeem     | Low      | 2021-05-12T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
       | 4  | Do you have this product  | Do you have this product         | New Feature  | NKeche   | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-04-12T07:20:50.52Z |
       | 5  | I wish I could do this    | I wish I could do this           | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-03-12T07:20:50.52Z |
       | 6  | Find duplicate contacts   | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-03-12T07:20:50.52Z |
@@ -102,13 +102,13 @@ Feature: As a CSR, I should be able to see a list of requests so that address th
     When Lynissa selects "to do" from the "status" filter
     Then Lynissa should see a list of 1 item
       | id | title    | description                      | request type | customer | platform | status | assignee | follower1 | follower2 | priority | last updated            | created                 |
-      | 1  | No Price | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | James     | Akeem     | low      | 2021-05-12T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
+      | 1  | No Price | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | James     | Akeem     | Low      | 2021-05-12T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
 
   Scenario: Filter by request type
     When Lynissa selects "Bug" from the "request type" filter
     Then Lynissa should see a list of 1 item
       | id | title    | description                      | request type | customer | platform | status | assignee | follower1 | follower2 | priority | last updated            | created                 |
-      | 1  | No Price | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | James     | Akeem     | low      | 2021-05-12T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
+      | 1  | No Price | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | James     | Akeem     | Low      | 2021-05-12T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
 
   @ui
   Scenario: Show Kanban
