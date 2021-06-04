@@ -45,7 +45,7 @@ Feature: As a CSR, I should be able to see a list of requests so that address th
   Scenario: See a list of all requests that sorted by created desc by default
     Given Lynissa selects "2021-01-01" from the "start date" filter
     When Lynissa selects "2021-06-06" from the "end date" filter
-    Then Lynissa should see a list of 10 customers
+    Then Lynissa should see a list of 10 requests
       | id | title                     | description                      | request type | customer | platform | status | assignee | follower1 | follower2 | priority | last updated            | created                 |
       | 3  | How does this work        | How does this work               | New Feature  | Andy     | web      | done   | lynissa  | Francis   | Oleta     | Medium   | 2021-05-22T07:20:50.52Z | 2021-05-23T07:20:50.52Z |
       | 2  | Add Courier               | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  | NKeche    | Oleta     | High     | 2021-05-22T07:20:50.52Z | 2021-05-21T07:20:50.52Z |
@@ -73,8 +73,8 @@ Feature: As a CSR, I should be able to see a list of requests so that address th
     When Lynissa changes the sort order of the "last updated" column
     Then Lynissa should see a list of 10 items
       | id | title                     | description              | request type | customer | platform | status | assignee | follower1 | follower2 | priority | last updated            | created                 |
-      | 3  | How does this work        | How does this work       | New Feature  | Andy     | web      | done   | lynissa  | Francis   | Oleta     | Medium   | 2021-05-22T07:20:50.52Z | 2021-05-23T07:20:50.52Z |
       | 2  | Add Courier               | Add Jetbox as a courier  | New Feature  | James    | web      | done   | lynissa  | NKeche    | Oleta     | High     | 2021-05-22T07:20:50.52Z | 2021-05-21T07:20:50.52Z |
+      | 3  | How does this work        | How does this work       | New Feature  | Andy     | web      | done   | lynissa  | Francis   | Oleta     | Medium   | 2021-05-22T07:20:50.52Z | 2021-05-23T07:20:50.52Z |
       | 4  | Do you have this product  | Do you have this product | New Feature  | NKeche   | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-04-12T07:20:50.52Z |
       | 5  | I wish I could do this    | I wish I could do this   | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-03-12T07:20:50.52Z |
       | 6  | Find duplicate contacts   | Add Jetbox as a courier  | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-03-12T07:20:50.52Z |
