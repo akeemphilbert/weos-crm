@@ -13,10 +13,6 @@ Feature: As a CSR, I should be able to update a Request so that I can change the
       | New Feature |             |
       | Bug         |             |
       | Kudos       |             |
-    And the CRM already has requests
-      | id | title       | description                      | request type | customer | platform | status | assignee | customer | priority | last updated            | created                 |
-      | 1  | No Price    | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | Maria    | low      | 2021-05-12T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
-      | 2  | Add Courier | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  | James    | High     | 2021-05-02T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
     And the "Bug" Request Type has fields
       | title     | type     |
       | Platform  | Text     |
@@ -24,6 +20,11 @@ Feature: As a CSR, I should be able to update a Request so that I can change the
     And the "Bug" Request Type has tasks
       | title       | due date |
       | Update File | 2        |
+    And the CRM already has requests
+      | id | title       | description                      | request type | customer | platform | status | assignee | customer | priority | last updated            | created                 |
+      | 1  | No Price    | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | Maria    | low      | 2021-05-12T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
+      | 2  | Add Courier | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  | James    | High     | 2021-05-02T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
+
 
   Scenario: Updating a request with custom fields
     Given Lynissa is viewing a Request with id 1
