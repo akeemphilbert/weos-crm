@@ -256,6 +256,11 @@ jobs:
         with:
           build: yarn generate
           start: yarn start
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
       - uses: actions/upload-artifact@v2
         with:
           name: Mac OS Desktop
