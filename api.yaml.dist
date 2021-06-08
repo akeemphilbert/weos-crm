@@ -20,7 +20,6 @@ x-weos-config:
   middleware:
     - RequestID
     - Recover
-
 paths:
   /:
     get:
@@ -65,7 +64,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerList'
+                $ref: "#/components/schemas/CustomerList"
         400:
           description: Bad Request
         401:
@@ -82,21 +81,39 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Customer'
+              $ref: "#/components/schemas/Customer"
       responses:
         201:
           description: Create a Customer
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Customer'
+                $ref: "#/components/schemas/Customer"
         400:
           description: Bad Request
         401:
           description: User is not authenticated
         403:
-          description: User is authenticated but is not authorized to access this list      
+          description: User is authenticated but is not authorized to access this list
   /customer/{id}:
+    get:
+      operationId: Get Customer Details
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the customer
+      x-weos-config:
+        handler: GetCustomer
+      responses:
+        200:
+          description: Get customer
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
     put:
       operationId: Update Customer
       parameters:
@@ -112,9 +129,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Customer'
+              $ref: "#/components/schemas/Customer"
       x-weos-config:
-        handler: CreateCustomer
+        handler: UpdateCustomer
       responses:
         200:
           description: Customer updated
@@ -122,7 +139,7 @@ paths:
           description: User is not authenticated
         403:
           description: User is authenticated but is not authorized to access this list
-  /admin:
+  /admin*:
     get:
       operationId: Admin
       x-weos-config:
@@ -248,6 +265,116 @@ paths:
           description: User is not authenticated
         403:
           description: User is authenticated but is not authorized to access this list
+  /request:
+    summary: Get a list of requests
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+      - in: query
+        name: limit
+        schema:
+          type: integer
+      - in: query
+        name: sort
+        schema:
+          type: array
+          items:
+            type: string
+      - in: query
+        name: sort_type
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: asc
+    get:
+      operationId: List Requests
+      x-weos-config:
+        handler: GetRequests
+      responses:
+        200:
+          description: List of Requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestList"
+        400:
+          description: Bad Request
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
+    post:
+      operationId: Create Request
+      x-weos-config:
+        handler: CreateRequest
+      requestBody:
+        description: Create a request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request"
+      responses:
+        201:
+          description: Create a Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Request"
+        400:
+          description: Bad Request
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
+  /request/{id}:
+    get:
+      operationId: Get Request Details
+      x-weos-config:
+        handler: GetRequest
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the request
+      responses:
+        200:
+          description: Get request successful
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
+    put:
+      operationId: Update Request
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the request
+      requestBody:
+        description: Update a request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestType"
+      responses:
+        200:
+          description: Request updated
+        401:
+          description: User is not authenticated
+        403:
+          description: User is authenticated but is not authorized to access this list
 components:
   schemas:
     CategorizedValue:
@@ -293,23 +420,23 @@ components:
         organizations:
           type: array
           items:
-            $ref: '#/components/schemas/Organization'
+            $ref: "#/components/schemas/Organization"
         emails:
           type: array
           items:
-            $ref: '#/components/schemas/CategorizedValue'
+            $ref: "#/components/schemas/CategorizedValue"
         phones:
           type: array
           items:
-            $ref: '#/components/schemas/CategorizedValue'
+            $ref: "#/components/schemas/CategorizedValue"
         websites:
           type: array
           items:
-            $ref: '#/components/schemas/CategorizedValue'
+            $ref: "#/components/schemas/CategorizedValue"
         addresses:
           type: array
           items:
-            $ref: '#/components/schemas/Address'
+            $ref: "#/components/schemas/Address"
     CustomerList:
       type: object
       properties:
@@ -322,7 +449,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/Customer'
+            $ref: "#/components/schemas/Customer"
     RequestType:
       type: object
       properties:
@@ -333,7 +460,7 @@ components:
         tasks:
           type: array
           items:
-            $ref: "#/components/schemas/Task"
+            $ref: "#/components/schemas/RequestTypeTask"
         additionalFields:
           type: array
           items:
@@ -351,7 +478,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RequestType"
-    Task:
+    RequestTypeTask:
       type: object
       properties:
         title:
@@ -367,6 +494,57 @@ components:
           type: string
         value:
           type: string
-
-
-
+    Request:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        priority:
+          type: integer
+        Tasks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Task"
+        additionalFields:
+          type: array
+          items:
+            $ref: "#/components/schemas/StringField"
+        assignee:
+          type: object
+          items:
+            $ref: "#/components/schemas/User"
+        followers:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+    Task:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        dueDate:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+    RequestList:
+      type: object
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Request"

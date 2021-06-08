@@ -5,7 +5,6 @@ Feature: As a CSR, I should be able to see a list of customers so that I can fin
   Background:
     Given a CSR named "Lynissa"
     And Lynissa has permissions to view customers
-    And Lynissa is on the screen to view customers
     And the CRM already has a few users
 
       | name     | notes          | tags        | email1 category | email1 address       | email2 category | email2 address         | phone        | address1 | address2        | city      | country             |
@@ -21,10 +20,10 @@ Feature: As a CSR, I should be able to see a list of customers so that I can fin
       | Maya     | 10th Customer. | webooks     | work            | maya@example.org     |                 |                        | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
       | Salah    | 11th Customer. | webooks     | work            | salah@example.org    |                 |                        | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
       | Keron    | 12th Customer. | webooks     | work            | keron@example.org    |                 |                        | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
+    And Lynissa is on the screen to view customers
     And the default number of customers per page is 10
     And and options for the no of items per page are 10,20,100
 
-  
   Scenario: See a list of all customers
     When Lynissa first visits the list
     Then Lynissa should see a list of 10 customers
@@ -93,5 +92,4 @@ Feature: As a CSR, I should be able to see a list of customers so that I can fin
       | Oleta    | oleta@example.org                         | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
       | Salah    | salah@example.org                         | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
       | Simon    | simon@example.org, simon.work@example.org | 868-123-4560 | Apt 1.   | 5 Flamingo Blvd | Some City | Trinidad and Tobago |
-
 
