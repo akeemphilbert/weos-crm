@@ -37,6 +37,17 @@ Feature: As a CSR, I should be able to see a list of requests so that address th
     And the default number of items per page is 10
     And and options for the no of items per page are 10,20,100
 
+  Scenario: Filter requests by created date
+    Given Lynissa selects "2021-01-01" from the "start date" filter
+    When Lynissa selects "2021-02-28" from the "end date" filter
+    Then Lynissa should see a list of 5 requests
+      | id | title                     | description                      | request type | customer | platform | status | assignee | follower1 | follower2 | priority | last updated            | created                 |
+      | 8  | Sync with google contacts    | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-02-12T07:20:50.52Z |
+      | 9  | Export all custom fields     | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-02-12T07:20:50.52Z |
+      | 10 | Bulk actions                 | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-02-12T07:20:50.52Z |
+      | 11 | Company List                 | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-05-22T07:20:50.52Z | 2021-01-12T07:20:50.52Z |
+      | 12 | Integrate Facebook Messenger | Add Jetbox as a courier          | New Feature  | James    | web      | done   | lynissa  |           |           | High     | 2021-01-12T07:20:50.52Z | 2021-01-12T07:20:50.52Z |
+
   Scenario: Default list of requests
     When Lynissa visits page for the first time
     Then the "start date" filter should be 30 days from the current day
@@ -103,6 +114,12 @@ Feature: As a CSR, I should be able to see a list of requests so that address th
     Then Lynissa should see a list of 1 item
       | id | title    | description                      | request type | customer | platform | status | assignee | follower1 | follower2 | priority | last updated            | created                 |
       | 1  | No Price | The product doesn't have a price | Bug          | Maria    | web      | to do  | lynissa  | James     | Akeem     | Low      | 2021-05-12T07:20:50.52Z | 2021-05-12T07:20:50.52Z |
+
+  Scenario: Search for request by customer and filter by type
+    Given Lynissa searches for "Maria"
+    When Lynissa selects "done" from the "status" filter
+    Then Lynissa should see a list of 0 items
+      | id | title                    | description              | request type | customer | platform | status | assignee | follower1 | follower2 | priority | last updated            | created                 |
 
   Scenario: Filter by request type
     When Lynissa selects "Bug" from the "request type" filter
